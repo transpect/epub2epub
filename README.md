@@ -1,2 +1,2 @@
 # epub2epub
-XProc library to migrate usually older EPUBs according to more recent EPUB standards
+XProc library for migrating mostly older EPUBs to newer EPUB standards
