@@ -7,8 +7,8 @@
   xmlns:epub="http://transpect.io/epubtools"
   xmlns:e2e="http://transpect.io/epub2epub"
   version="1.0" 
-  name="e2e-main" 
-  type="e2e:main">
+  name="epub2epub" 
+  type="e2e:epub2epub">
   
   <p:documentation>
     Pipeline to migrate an EPUB2. Consumes an EPUB file and 
