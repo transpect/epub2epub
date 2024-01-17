@@ -31,6 +31,7 @@
   <p:option name="terminate-on-error" select="'no'"/>
 
   <p:import href="error-handler.xpl"/>
+  <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl"/>
   <p:import href="http://transpect.io/xproc-util/store-debug/xpl/store-debug.xpl"/>
   
   <p:try name="try-copy-resources">

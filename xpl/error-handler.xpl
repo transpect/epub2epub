@@ -24,6 +24,8 @@
   <p:option name="pipeline-step"/>
   <p:option name="terminate-on-error" select="'no'"/>
   
+  <p:import href="http://transpect.io/xproc-util/store-debug/xpl/store-debug.xpl"/>
+  
   <p:choose name="terminate-or-continue-on-error">
     <p:when test="$terminate-on-error eq 'yes'">
       <p:output port="result"/>

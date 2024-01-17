@@ -6,7 +6,7 @@
   xmlns:tr="http://transpect.io"
   xmlns:epub="http://transpect.io/epubtools"
   xmlns:e2e="http://transpect.io/epub2epub"
-  version="1.0" 
+  version="1.0"
   name="epub2epub" 
   type="e2e:epub2epub">
   
