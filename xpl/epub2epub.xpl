@@ -17,11 +17,21 @@
   </p:documentation>
   
   <p:output port="result" primary="true">
+    <p:documentation>The EPUB paths document</p:documentation>
+    <p:pipe port="result" step="main"/>
+  </p:output>
+  
+  <p:output port="html" primary="false">
     <p:documentation>The HTML document</p:documentation>
+    <p:pipe port="html" step="main"/>
   </p:output>
   
   <p:output port="report" primary="false" sequence="true">
     <p:pipe port="report" step="main"/>
+  </p:output>
+  
+  <p:output port="input-for-schematron" primary="false" sequence="true">
+    <p:pipe port="input-for-schematron" step="main"/>
   </p:output>
   
   <p:option name="href">
@@ -99,6 +109,12 @@
     <p:output port="report" primary="false" sequence="true">
       <p:pipe port="report" step="unzip"/>
     </p:output>
+    <p:output port="input-for-schematron" primary="false" sequence="true">
+      <p:pipe port="input-for-schematron" step="choose-create-epub"/>
+    </p:output>
+    <p:output port="html">
+      <p:pipe port="result" step="load-html"/>
+    </p:output>
     <p:variable name="outdir-href" select="/c:result/@local-href"/>
     <p:variable name="epub-href" select="/c:result/@local-href">
       <p:pipe port="result" step="normalize-epub-path"/>
@@ -147,8 +163,12 @@
       <p:with-option name="debug-dir-uri" select="$debug-dir-uri"/>
     </e2e:create-config>
     
-    <p:choose>
+    <p:choose name="choose-create-epub">
       <p:when test="$create-epub eq 'yes'">
+        <p:output port="result" primary="true"/>
+        <p:output port="input-for-schematron" primary="false" sequence="true">
+          <p:pipe port="input-for-schematron" step="epub-convert"/>
+        </p:output>
         <epub:convert name="epub-convert">
           <p:input port="source" select="/opf:epub/html:html">
             <p:pipe port="result" step="create-config"/>
@@ -166,6 +186,10 @@
         </epub:convert>
       </p:when>
       <p:otherwise>
+        <p:output port="result" primary="true"/>
+        <p:output port="input-for-schematron" primary="false" sequence="true">
+          <p:empty/>
+        </p:output>
         <p:identity/>
       </p:otherwise>
     </p:choose>
