@@ -19,8 +19,16 @@
       opf:epub XML document containing 
       all HTML documents as children
     </p:documentation>
+    <p:pipe port="result" step="try-load-html"/>
   </p:output>
-
+  
+  <p:output port="html" primary="false">
+    <p:documentation>
+      The HTML document
+    </p:documentation>
+    <p:pipe port="html" step="try-load-html"/>
+  </p:output>
+  
   <p:output port="report" primary="false" sequence="true">
     <p:pipe port="report" step="try-load-html"/>
   </p:output>
@@ -36,7 +44,12 @@
   
   <p:try name="try-load-html">
     <p:group>
-      <p:output port="result" primary="true"/>
+      <p:output port="result" primary="true">
+        <p:pipe port="result" step="html-plus-opf"/>
+      </p:output>
+      <p:output port="html" primary="false" sequence="true">
+        <p:pipe port="result" step="filter-html"/>
+      </p:output>
       <p:output port="report" primary="false" sequence="true">
         <p:empty/>
       </p:output>
@@ -99,15 +112,38 @@
         </p:xslt>
         
       </p:viewport>
+      
+      <p:identity name="html-plus-opf"/>
 
-      <tr:store-debug pipeline-step="epub-migrate/04-html">
+      <tr:store-debug pipeline-step="epub-migrate/04-html-plus-opf">
         <p:with-option name="active" select="$debug"/>
         <p:with-option name="base-uri" select="$debug-dir-uri"/>
       </tr:store-debug>
+      
+      <p:add-attribute name="copy-xml-base" attribute-name="xml:base" match="/opf:epub/html:html">
+        <p:with-option name="attribute-value" select="/opf:epub/@xml:base"/>
+      </p:add-attribute>
+      
+      <p:filter select="/opf:epub/html:html" name="filter-html"/>
+      
+      <tr:store-debug pipeline-step="epub-migrate/06-html-only">
+        <p:with-option name="active" select="$debug"/>
+        <p:with-option name="base-uri" select="$debug-dir-uri"/>
+      </tr:store-debug>
+      
+      <p:sink/>
 
     </p:group>
     <p:catch name="catch">
       <p:output port="result" primary="true"/>
+      <p:output port="html" primary="false">
+        <p:inline>
+          <html>
+            <head>report</head>
+            <body><p>Error while loading html</p></body>
+          </html>
+        </p:inline>
+      </p:output>
       <p:output port="report" primary="false">
         <p:pipe port="result" step="terminate-or-continue-on-error"/>
       </p:output>
