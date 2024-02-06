@@ -113,7 +113,7 @@
       <p:pipe port="input-for-schematron" step="choose-create-epub"/>
     </p:output>
     <p:output port="html">
-      <p:pipe port="result" step="load-html"/>
+      <p:pipe port="html" step="load-html"/>
     </p:output>
     <p:variable name="outdir-href" select="/c:result/@local-href"/>
     <p:variable name="epub-href" select="/c:result/@local-href">
