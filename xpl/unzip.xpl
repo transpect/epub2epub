@@ -44,7 +44,7 @@
         <p:with-option name="message" select="'[info] unzip: ', $href, ' => ', $outdir"/>
       </cx:message>
 
-      <tr:store-debug pipeline-step="epub-migrate/00-unzip">
+      <tr:store-debug pipeline-step="epub2epub/00-unzip">
         <p:with-option name="active" select="$debug"/>
         <p:with-option name="base-uri" select="$debug-dir-uri"/>
       </tr:store-debug>

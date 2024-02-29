@@ -6,10 +6,16 @@
   exclude-result-prefixes="xs"
   version="3.0">
   
+  <xsl:param name="remove-chars-regex" select="'\s'" as="xs:string"/>
+  
   <xsl:mode on-no-match="shallow-copy"/>
   
   <xsl:template match="a/@href[contains(., '#')]">
     <xsl:attribute name="href" select="concat('#', substring-after(., '#'))"/>
+  </xsl:template>
+  
+  <xsl:template match="img/@src">
+    <xsl:attribute name="{name()}" select="replace(., $remove-chars-regex, '')"/>
   </xsl:template>
   
 </xsl:stylesheet>

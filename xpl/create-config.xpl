@@ -23,7 +23,8 @@
   
   <p:option name="outdir"/>
   <p:option name="epub-version" select="'3.0'"/>
-  <p:option name="html-filename" select="'content.html'"/>
+  <p:option name="html-subdir-name" select="'content'"/>
+  <p:option name="remove-chars-regex" select="'\s'"/>
   <p:option name="debug" select="'no'"/>
   <p:option name="debug-dir-uri" select="'debug'"/>
 
@@ -34,8 +35,9 @@
       <p:document href="../xsl/create-config.xsl"/>
     </p:input>
     <p:with-param name="outdir" select="$outdir"/>
-    <p:with-param name="html-filename" select="$html-filename"/>
+    <p:with-param name="html-subdir-name" select="$html-subdir-name"/>
     <p:with-param name="epub-version" select="$epub-version"/>
+    <p:with-param name="remove-chars-regex" select="$remove-chars-regex"/>
   </p:xslt>
   
   <p:store indent="true" include-content-type="true">
@@ -51,7 +53,7 @@
     </p:input>
   </p:insert>
   
-  <tr:store-debug pipeline-step="epub-migrate/10-epub-config">
+  <tr:store-debug pipeline-step="epub2epub/10-epub-config">
     <p:with-option name="active" select="$debug"/>
     <p:with-option name="base-uri" select="$debug-dir-uri"/>
   </tr:store-debug>

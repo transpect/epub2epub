@@ -26,6 +26,7 @@
   </p:output>
   
   <p:option name="outdir"/>
+  <p:option name="remove-chars-regex" select="'\s'"/>
   <p:option name="debug" select="'no'"/>
   <p:option name="debug-dir-uri" select="'debug'"/>
   <p:option name="terminate-on-error" select="'no'"/>
@@ -33,6 +34,10 @@
   <p:import href="error-handler.xpl"/>
   <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl"/>
   <p:import href="http://transpect.io/xproc-util/store-debug/xpl/store-debug.xpl"/>
+  
+  <cx:message name="msg1">
+    <p:with-option name="message" select="'[info] copying resources...'"/>
+  </cx:message>
   
   <p:try name="try-copy-resources">
     <p:group>
@@ -47,14 +52,14 @@
       <p:for-each name="file-iteration">
         <p:iteration-source select="/opf:epub/opf:package/opf:manifest/opf:item[not(@media-type = ('application/xhtml+xml', 
                                                                                                    'application/x-dtbncx+xml'))]"/>
-        <p:variable name="path" select="resolve-uri(opf:item/@href, $opf-uri)"/>
-        <p:variable name="target" select="concat($outdir, '/', opf:item/@href)"/>
+        <p:variable name="path" select="resolve-uri(encode-for-uri(opf:item/@href), $opf-uri)"/>
+        <p:variable name="target" select="concat($outdir, '/', replace(opf:item/@href, $remove-chars-regex, ''))"/>
         
-        <cx:message>
-          <p:with-option name="message" select="'[info] copy resource: ', opf:item/@href"/>
+        <cx:message name="msg2">
+          <p:with-option name="message" select="'[info] ', $path, ' => ', $target"/>
         </cx:message>
         
-        <pxf:copy name="copy-individual-resource">
+        <pxf:copy name="copy-individual-resource" cx:depends-on="msg2">
           <p:with-option name="href" select="$path"/>
           <p:with-option name="target" select="$target"/>
         </pxf:copy>
@@ -107,7 +112,7 @@
         <p:with-option name="attribute-value" select="concat($outdir, '/', $html-filename)"/>
       </p:add-attribute>
       
-      <tr:store-debug pipeline-step="epub-migrate/08-copy-resources">
+      <tr:store-debug pipeline-step="epub2epub/08-copy-resources">
         <p:with-option name="active" select="$debug"/>
         <p:with-option name="base-uri" select="$debug-dir-uri"/>
       </tr:store-debug>

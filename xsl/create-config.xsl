@@ -6,24 +6,29 @@
   exclude-result-prefixes="xs" 
   version="3.0">
   
+  <xsl:output indent="yes"/>
+  
   <xsl:mode on-no-match="shallow-copy"/>
   
   <xsl:param name="outdir" as="xs:string"/>
+  <xsl:param name="html-subdir-name" select="'content'" as="xs:string"/>
+  <xsl:param name="epub-version" select="'3.0'" as="xs:string"/>
+  <xsl:param name="remove-chars-regex" select="'\s'" as="xs:string"/>
   
   <xsl:template match="/opf:epub">
     <xsl:variable name="cover-id" as="attribute(content)" 
                   select="opf:package/opf:metadata/opf:meta[@name eq 'cover']/@content"/>
-    <epub-config format="EPUB3" 
+    <epub-config format="{$epub-version}" 
       layout="reflowable" 
       css-handling="regenerated-per-split remove-comments"
       css-parser="REx"
-      html-subdir-name="text" 
+      html-subdir-name="{$html-subdir-name}" 
       indent="selective"
       font-subset="false"
       consider-headings-in-tables="false">
       
       <cover svg="true" svg-scale-hack="true" 
-             href="{opf:package/opf:manifest/opf:item[@id eq $cover-id]/@href}"/>
+             href="{replace(opf:package/opf:manifest/opf:item[@id eq $cover-id]/@href, $remove-chars-regex, '')}"/>
       
       <types>
         <type name="toc" heading="Inhaltsverzeichnis" hidden="true" fallback-id-for-landmark="rendered_toc"/> 
@@ -58,6 +63,9 @@
     </epub-config>
   </xsl:template>
   
-  <xsl:template match="opf:metadata/dc:date"/>
+  <!-- remove attributes such as opf:role="aut" opf:file-as="Trousseau, Frau Paula" -->
+  
+  <xsl:template match="opf:metadata/dc:date
+                      |opf:metadata/*/@opf:*"/>
   
 </xsl:stylesheet>

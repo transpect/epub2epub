@@ -34,6 +34,7 @@
   </p:output>
   
   <p:option name="href"/>
+  <p:option name="remove-chars-regex" select="'\s'"/>
   <p:option name="debug" select="'no'"/>
   <p:option name="debug-dir-uri" select="'debug'"/>
   <p:option name="terminate-on-error" select="'no'"/>
@@ -106,16 +107,14 @@
           <p:input port="stylesheet">
             <p:document href="../xsl/patch-html.xsl"/>
           </p:input>
-          <p:input port="parameters">
-            <p:empty/>
-          </p:input>
+          <p:with-param name="remove-chars-regex" select="$remove-chars-regex"/>
         </p:xslt>
         
       </p:viewport>
       
       <p:identity name="html-plus-opf"/>
 
-      <tr:store-debug pipeline-step="epub-migrate/04-html-plus-opf">
+      <tr:store-debug pipeline-step="epub2epub/04-html-plus-opf">
         <p:with-option name="active" select="$debug"/>
         <p:with-option name="base-uri" select="$debug-dir-uri"/>
       </tr:store-debug>
@@ -126,7 +125,7 @@
       
       <p:filter select="/opf:epub/html:html" name="filter-html"/>
       
-      <tr:store-debug pipeline-step="epub-migrate/06-html-only">
+      <tr:store-debug pipeline-step="epub2epub/06-html-only">
         <p:with-option name="active" select="$debug"/>
         <p:with-option name="base-uri" select="$debug-dir-uri"/>
       </tr:store-debug>

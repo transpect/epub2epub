@@ -51,7 +51,7 @@
       
       <p:add-xml-base name="add-xml-base"/>
 
-      <tr:store-debug pipeline-step="epub-migrate/02-opf">
+      <tr:store-debug pipeline-step="epub2epub/02-opf">
         <p:with-option name="active" select="$debug"/>
         <p:with-option name="base-uri" select="$debug-dir-uri"/>
       </tr:store-debug>

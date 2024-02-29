@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <p:declare-step xmlns:p="http://www.w3.org/ns/xproc"
   xmlns:c="http://www.w3.org/ns/xproc-step"
+  xmlns:cx="http://xmlcalabash.com/ns/extensions"
   xmlns:opf="http://www.idpf.org/2007/opf"
   xmlns:html="http://www.w3.org/1999/xhtml"
   xmlns:tr="http://transpect.io"
@@ -50,13 +51,13 @@
       the contents and epub-config extracted from the input EPUB are stored to outdir.
     </p:documentation>
   </p:option>
-  <p:option name="epub-version" select="'3.0'">
+  <p:option name="epub-version" select="'EPUB3'">
     <p:documentation>
-      EPUB version for conversion. For example, if the EPUB is 
+      EPUB version for conversion, e.g. 'EPUB2', 'EPUB3'. For example, if the EPUB is 
       simply invalid, you can simply keep the version and repair it.
     </p:documentation>
   </p:option>
-  <p:option name="html-filename" select="'content.html'">
+  <p:option name="html-subdir-name" select="'content'">
     <p:documentation>
       New filename of the HTML file in the EPUB package.
     </p:documentation>
@@ -64,6 +65,11 @@
   <p:option name="toc-page" select="4">
     <p:documentation>
       Page index after there the toc is inserted
+    </p:documentation>
+  </p:option>
+  <p:option name="remove-chars-regex" select="'([\p{Zs}]|%20)'">
+    <p:documentation>
+      Regular expression which matches characters to be deleted in filenames
     </p:documentation>
   </p:option>
   <p:option name="debug" select="'no'">
@@ -137,6 +143,7 @@
     
     <e2e:load-html name="load-html">
       <p:with-option name="href" select="$epub-href"/>
+      <p:with-option name="remove-chars-regex" select="$remove-chars-regex"/>
       <p:with-option name="debug" select="$debug"/>
       <p:with-option name="debug-dir-uri" select="$debug-dir-uri"/>
       <p:with-option name="terminate-on-error" select="$terminate-on-error"/>
@@ -150,20 +157,22 @@
     
     <e2e:copy-resources name="copy-resources">
       <p:with-option name="outdir" select="$outdir-href"/>
+      <p:with-option name="remove-chars-regex" select="$remove-chars-regex"/>
       <p:with-option name="debug" select="$debug"/>
       <p:with-option name="debug-dir-uri" select="$debug-dir-uri"/>
       <p:with-option name="terminate-on-error" select="$terminate-on-error"/>
     </e2e:copy-resources>
     
-    <e2e:create-config name="create-config">
+    <e2e:create-config name="create-config" cx:depends-on="copy-resources">
       <p:with-option name="epub-version" select="$epub-version"/>
-      <p:with-option name="html-filename" select="$html-filename"/>
+      <p:with-option name="html-subdir-name" select="$html-subdir-name"/>
+      <p:with-option name="remove-chars-regex" select="$remove-chars-regex"/>
       <p:with-option name="outdir" select="$outdir-href"/>
       <p:with-option name="debug" select="$debug"/>
       <p:with-option name="debug-dir-uri" select="$debug-dir-uri"/>
     </e2e:create-config>
     
-    <p:choose name="choose-create-epub">
+    <p:choose name="choose-create-epub" cx:depends-on="create-config">
       <p:when test="$create-epub eq 'yes'">
         <p:output port="result" primary="true"/>
         <p:output port="input-for-schematron" primary="false" sequence="true">
