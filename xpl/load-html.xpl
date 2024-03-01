@@ -79,6 +79,10 @@
           </p:input>
         </p:insert>
         
+        <p:add-attribute match="/html:html/html:body/html:div[@class eq 'epub-html-split']" attribute-name="id">
+          <p:with-option name="attribute-value" select="$idref"/>
+        </p:add-attribute>
+        
       </p:for-each>
       
       <p:wrap-sequence wrapper="opf:epub" name="wrap-html"/>

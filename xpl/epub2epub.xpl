@@ -149,7 +149,7 @@
       <p:with-option name="terminate-on-error" select="$terminate-on-error"/>
     </e2e:load-html>
     
-    <e2e:ncx-to-nav name="ncx-to-nav">
+    <e2e:ncx-to-nav name="ncx-to-nav" cx:depends-on="load-html">
       <p:with-option name="toc-page" select="$toc-page"/>
       <p:with-option name="debug" select="$debug"/>
       <p:with-option name="debug-dir-uri" select="$debug-dir-uri"/>

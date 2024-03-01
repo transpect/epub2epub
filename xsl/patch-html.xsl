@@ -18,4 +18,7 @@
     <xsl:attribute name="{name()}" select="replace(., $remove-chars-regex, '')"/>
   </xsl:template>
   
+  <xsl:template match="head/@*
+                      |meta[@http-equiv]"/>
+  
 </xsl:stylesheet>

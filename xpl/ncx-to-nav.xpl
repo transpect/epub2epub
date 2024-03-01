@@ -27,7 +27,6 @@
   <p:import href="http://transpect.io/xproc-util/store-debug/xpl/store-debug.xpl"/>
   
   <p:variable name="toc-id" select="/opf:epub/opf:package/opf:spine/@toc"/>
-  <p:variable name="pos" select="$toc-page"/>
   
   <p:load name="load-ncx">
     <p:with-option name="href"
@@ -35,24 +34,15 @@
                                        /opf:epub/opf:package/@xml:base)"/>
   </p:load>
   
-  <p:xslt name="transform-ncx">
-    <p:input port="stylesheet">
-      <p:document href="../xsl/ncx-to-nav.xsl"/>
-    </p:input>
-    <p:input port="parameters">
-      <p:empty/>
-    </p:input>
-  </p:xslt>
-  
   <p:sink/>
   
-  <p:xslt name="insert-nav">
+  <p:xslt name="transform-ncx">
     <p:input port="source">
       <p:pipe port="source" step="e2e-ncx-to-nav"/>
-      <p:pipe port="result" step="transform-ncx"/>
+      <p:pipe port="result" step="load-ncx"/>
     </p:input>
     <p:input port="stylesheet">
-      <p:document href="../xsl/insert-nav.xsl"/>
+      <p:document href="../xsl/ncx-to-nav.xsl"/>
     </p:input>
     <p:with-param name="toc-page" select="$toc-page"/>
   </p:xslt>
