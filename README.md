@@ -3,7 +3,7 @@ This library takes EPUB 2.0 and EPUB 3.0 and converts them to more recent standa
 
 ## Options
 
-| Option | Description  |   
+| Option | Description  |
 |---|---|
 | href | Path to the EPUB file.  |
 | outdir | Where the output will be stored. |
