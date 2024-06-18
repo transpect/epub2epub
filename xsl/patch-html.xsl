@@ -109,6 +109,7 @@
                       |br/@clear
                       |hr/@noshade
                       |hr/@size
+                      |html/@version
                       |iframe/@marginheight
                       |iframe/@marginwidth    
                       |iframe/@scrolling
