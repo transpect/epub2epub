@@ -122,6 +122,7 @@
                       |@frame
                       |@hspace
                       |@vspace
+                      |@shape
                       |@size
                       |@type
                       |@valign
