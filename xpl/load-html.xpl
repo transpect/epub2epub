@@ -107,6 +107,10 @@
       
       <p:viewport match="/opf:epub/html:html" name="patch-html-viewport">
         
+        <cx:message>
+          <p:with-option name="message" select="'[info] patch deprecated html elements and attributes'"/>
+        </cx:message>
+        
         <p:xslt name="patch-html">
           <p:input port="stylesheet">
             <p:document href="../xsl/patch-html.xsl"/>
