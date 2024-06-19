@@ -38,24 +38,26 @@
   </xsl:template>
   
   <xsl:template match="ncx:navMap">
-    <ol>
+    <ol class="toc-level-1">
       <xsl:apply-templates select="ncx:navPoint"/>
     </ol>
   </xsl:template>
   
   <xsl:template match="ncx:navPoint">
-    <li class="{@class}">
-      <a href="{if(contains(ncx:content/@src, '#'))
-                then concat('#', substring-after(ncx:content/@src, '#'))
-                else concat('#', key('id-from-filename', ncx:content/@src)/@id)}">
-        <xsl:apply-templates select="ncx:navLabel/ncx:text"/>
-      </a>
-      <xsl:if test="ncx:navPoint">
-        <ol>
-          <xsl:apply-templates select="ncx:navPoint"/>
-        </ol>
-      </xsl:if>
-    </li>
+    <xsl:if test="normalize-space(.)">
+      <li>
+        <a href="{if(contains(ncx:content/@src, '#'))
+                  then concat('#', substring-after(ncx:content/@src, '#'))
+                  else concat('#', key('id-from-filename', ncx:content/@src)/@id)}">
+          <xsl:apply-templates select="ncx:navLabel/ncx:text"/>
+        </a>
+        <xsl:if test="ncx:navPoint">
+          <ol class="toc-level-{count(ancestor::ncx:navPoint) + 2}">
+            <xsl:apply-templates select="ncx:navPoint"/>
+          </ol>
+        </xsl:if>
+      </li>
+    </xsl:if>
   </xsl:template>
   
   <xsl:template match="ncx:text">
