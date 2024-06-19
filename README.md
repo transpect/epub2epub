@@ -16,5 +16,3 @@ This library takes EPUB 2.0 and EPUB 3.0 and converts them to more recent standa
 | debug-dir-uri | The URI where the debug files are stored. |
 | status-dir-uri | The URI where messages are stored. |
 | terminate-on-error | Abort on error or attempt to catch it. |
-# epub2epub
-XProc library for migrating mostly older EPUBs to newer EPUB standards
