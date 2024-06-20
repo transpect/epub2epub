@@ -98,6 +98,7 @@
   <p:import href="unzip.xpl"/>
   <p:import href="load-rootfile.xpl"/>
   <p:import href="load-html.xpl"/>
+  <p:import href="patch-css.xpl"/>
   <p:import href="copy-resources.xpl"/>
   <p:import href="create-config.xpl"/>
   <p:import href="ncx-to-nav.xpl"/>
@@ -148,6 +149,13 @@
       <p:with-option name="debug-dir-uri" select="$debug-dir-uri"/>
       <p:with-option name="terminate-on-error" select="$terminate-on-error"/>
     </e2e:load-html>
+    
+    <e2e:patch-css name="patch-css">
+      <p:with-option name="href" select="$epub-href"/>
+      <p:with-option name="debug" select="$debug"/>
+      <p:with-option name="debug-dir-uri" select="$debug-dir-uri"/>
+      <p:with-option name="terminate-on-error" select="$terminate-on-error"/>
+    </e2e:patch-css>
     
     <e2e:ncx-to-nav name="ncx-to-nav" cx:depends-on="load-html">
       <p:with-option name="toc-page" select="$toc-page"/>
