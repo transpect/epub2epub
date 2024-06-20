@@ -129,4 +129,13 @@
                       |@valign
                       |@width"/>
   
+  <xsl:variable name="ids" select="//@id" as="attribute(id)*"/>
+  
+  <xsl:template match="@id[count(index-of($ids, .)) gt 1]">
+    <xsl:variable name="id" select="."/>
+    <xsl:if test="not(preceding::*[@id eq $id])">
+      <xsl:copy-of select="."/>
+    </xsl:if>
+  </xsl:template>
+  
 </xsl:stylesheet>
