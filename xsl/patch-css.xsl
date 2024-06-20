@@ -9,7 +9,9 @@
   <xsl:param name="href" as="xs:string"/>
   
   <xsl:template name="main">
-    <xsl:variable name="css" select="unparsed-text($href)" as="xs:string?"/>
+    <xsl:variable name="css" select="if(unparsed-text-available($href))
+                                     then unparsed-text($href)
+                                     else unparsed-text($href, 'cp1252')" as="xs:string?"/>
     <c:data content-type="text/plain">
       <xsl:value-of select="tr:patch-css($css)"/>
     </c:data>
