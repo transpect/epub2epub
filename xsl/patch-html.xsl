@@ -58,6 +58,22 @@
     </span>
   </xsl:template>
   
+  <xsl:template match="table[@border and not(@border = ('', '0'))]">
+    <div class="html-deprecated-border-att" style="{concat('border: ', @border, 'px solid #000;')}">
+      <xsl:copy>
+        <xsl:apply-templates select="@* except @border, node()"/>
+      </xsl:copy>
+    </div>
+  </xsl:template>
+  
+  <xsl:template match="img[@border and not(@border = ('', '0'))]">
+    <span class="html-deprecated-border-att" style="{concat('border: ', @border, 'px solid #000;')}">
+      <xsl:copy>
+        <xsl:apply-templates select="@* except @border, node()"/>
+      </xsl:copy>
+    </span>
+  </xsl:template>
+  
   <xsl:template match="font">
     <span class="html-deprecated-font-tag">
       <xsl:attribute name="style">
@@ -117,6 +133,7 @@
                       |link/@charset
                       |link/@rev
                       |@align
+                      |@border[. = ('', '0')]
                       |@char
                       |@charoff
                       |@clear
