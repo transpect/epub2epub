@@ -2,8 +2,10 @@
 <p:declare-step xmlns:p="http://www.w3.org/ns/xproc" 
   xmlns:c="http://www.w3.org/ns/xproc-step"
   xmlns:cx="http://xmlcalabash.com/ns/extensions" 
+  xmlns:dc="http://purl.org/dc/elements/1.1/"
   xmlns:tr="http://transpect.io"
   xmlns:ocf="urn:oasis:names:tc:opendocument:xmlns:container"
+  xmlns:opf="http://www.idpf.org/2007/opf"
   xmlns:e2e="http://transpect.io/epub2epub"
   version="1.0" 
   name="e2e-load-rootfile"
@@ -48,6 +50,8 @@
                        select="concat($epubdir, 
                                       /ocf:container/ocf:rootfiles/ocf:rootfile/@full-path)"/>
       </p:load>
+      
+      <p:delete match="/opf:package/opf:metadata/dc:*[not(normalize-space())]" name="remove-empty-metadata" cx:depends-on="load-opf"/>
       
       <p:add-xml-base name="add-xml-base"/>
 
