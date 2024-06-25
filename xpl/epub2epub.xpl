@@ -72,6 +72,11 @@
       Regular expression which matches characters to be deleted in filenames
     </p:documentation>
   </p:option>
+  <p:option name="html-lang" select="'en'">
+    <p:documentation>
+      If the HTML document language is not set, this value will be inserted.
+    </p:documentation>
+  </p:option>
   <p:option name="debug" select="'no'">
     <p:documentation>
       Pass "yes" to switch on storing debugging output
@@ -145,6 +150,7 @@
     <e2e:load-html name="load-html">
       <p:with-option name="href" select="$epub-href"/>
       <p:with-option name="remove-chars-regex" select="$remove-chars-regex"/>
+      <p:with-option name="html-lang" select="$html-lang"/>
       <p:with-option name="debug" select="$debug"/>
       <p:with-option name="debug-dir-uri" select="$debug-dir-uri"/>
       <p:with-option name="terminate-on-error" select="$terminate-on-error"/>

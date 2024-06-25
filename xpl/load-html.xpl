@@ -35,6 +35,7 @@
   
   <p:option name="href"/>
   <p:option name="remove-chars-regex" select="'\s'"/>
+  <p:option name="html-lang" select="'en'"/>
   <p:option name="debug" select="'no'"/>
   <p:option name="debug-dir-uri" select="'debug'"/>
   <p:option name="terminate-on-error" select="'no'"/>
@@ -129,6 +130,10 @@
       
       <p:add-attribute name="copy-xml-base" attribute-name="xml:base" match="/opf:epub/html:html">
         <p:with-option name="attribute-value" select="/opf:epub/@xml:base"/>
+      </p:add-attribute>
+      
+      <p:add-attribute name="add-html-lang" attribute-name="lang" match="/opf:epub/html:html">
+        <p:with-option name="attribute-value" select="$html-lang"/>
       </p:add-attribute>
       
       <p:filter select="/opf:epub/html:html" name="filter-html"/>
