@@ -119,6 +119,10 @@
     <p:with-option name="filename" select="$href"/>
   </tr:file-uri>
   
+  <tr:file-uri name="normalize-xslt-path">
+    <p:with-option name="filename" select="$xslt-href"/>
+  </tr:file-uri>
+  
   <tr:file-uri name="normalize-outdir-path">
     <p:with-option name="filename" select="$outdir"/>
   </tr:file-uri>
@@ -156,7 +160,9 @@
     
     <e2e:load-html name="load-html">
       <p:with-option name="href" select="$epub-href"/>
-      <p:with-option name="xslt-href" select="$xslt-href"/>
+      <p:with-option name="xslt-href" select="/c:result/@local-href">
+        <p:pipe port="result" step="normalize-xslt-path"/>
+      </p:with-option>
       <p:with-option name="remove-chars-regex" select="$remove-chars-regex"/>
       <p:with-option name="html-lang" select="$html-lang"/>
       <p:with-option name="debug" select="$debug"/>
