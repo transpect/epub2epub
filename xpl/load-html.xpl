@@ -36,6 +36,7 @@
   <p:option name="href"/>
   <p:option name="remove-chars-regex" select="'\s'"/>
   <p:option name="html-lang" select="'en'"/>
+  <p:option name="xslt-href" select="'../xsl/custom-xslt-placeholder.xsl'"/>
   <p:option name="debug" select="'no'"/>
   <p:option name="debug-dir-uri" select="'debug'"/>
   <p:option name="terminate-on-error" select="'no'"/>
@@ -47,7 +48,7 @@
   <p:try name="try-load-html">
     <p:group>
       <p:output port="result" primary="true">
-        <p:pipe port="result" step="html-plus-opf"/>
+        <p:pipe port="result" step="apply-custom-xslt"/>
       </p:output>
       <p:output port="html" primary="false" sequence="true">
         <p:pipe port="result" step="filter-html"/>
@@ -132,19 +133,42 @@
         <p:with-option name="attribute-value" select="$html-lang"/>
       </p:add-attribute>
       
-      <p:filter select="/opf:epub/html:html" name="filter-html"/>
+      <p:sink/>
       
-      <tr:store-debug pipeline-step="epub2epub/06-html-only">
+      <p:load name="load-custom-xslt">
+        <p:with-option name="href" select="$xslt-href"/>
+      </p:load>
+      
+      <p:xslt name="apply-custom-xslt">
+        <p:input port="source">
+          <p:pipe port="result" step="add-html-lang"/>
+        </p:input>
+        <p:input port="stylesheet">
+          <p:pipe port="result" step="load-custom-xslt"/>
+        </p:input>
+        <p:input port="parameters">
+          <p:empty/>
+        </p:input>
+      </p:xslt>
+      
+      <tr:store-debug pipeline-step="epub2epub/06-custom-xslt">
         <p:with-option name="active" select="$debug"/>
         <p:with-option name="base-uri" select="$debug-dir-uri"/>
       </tr:store-debug>
       
-      <p:sink/>
+      <p:filter select="/opf:epub/html:html" name="filter-html"/>
+      
+      <tr:store-debug pipeline-step="epub2epub/08-html-only">
+        <p:with-option name="active" select="$debug"/>
+        <p:with-option name="base-uri" select="$debug-dir-uri"/>
+      </tr:store-debug>
+      
+      <p:sink/>      
 
     </p:group>
     <p:catch name="catch">
       <p:output port="result" primary="true"/>
-      <p:output port="html" primary="false">
+      <p:output port="html" primary="false" sequence="true">
         <p:inline>
           <html>
             <head>report</head>
@@ -152,7 +176,7 @@
           </html>
         </p:inline>
       </p:output>
-      <p:output port="report" primary="false">
+      <p:output port="report" primary="false" sequence="true">
         <p:pipe port="result" step="terminate-or-continue-on-error"/>
       </p:output>
 

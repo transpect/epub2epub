@@ -46,6 +46,12 @@
       Where the output will be stored
     </p:documentation>
   </p:option>
+  <p:option name="xslt-href" select="'../xsl/custom-xslt-placeholder.xsl'">
+    <p:documentation>
+      Path to a custom XSLT that is applied 
+      on the combined OPF/HTML XML document.
+    </p:documentation>
+  </p:option>
   <p:option name="create-epub" select="'yes'">
     <p:documentation>
       Whether to create an EPUB with transpect epubtools module. When set to 'no', 
@@ -150,6 +156,7 @@
     
     <e2e:load-html name="load-html">
       <p:with-option name="href" select="$epub-href"/>
+      <p:with-option name="xslt-href" select="$xslt-href"/>
       <p:with-option name="remove-chars-regex" select="$remove-chars-regex"/>
       <p:with-option name="html-lang" select="$html-lang"/>
       <p:with-option name="debug" select="$debug"/>
