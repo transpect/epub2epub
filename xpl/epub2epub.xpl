@@ -3,6 +3,7 @@
   xmlns:c="http://www.w3.org/ns/xproc-step"
   xmlns:cx="http://xmlcalabash.com/ns/extensions"
   xmlns:opf="http://www.idpf.org/2007/opf"
+  xmlns:dc="http://purl.org/dc/elements/1.1/"
   xmlns:html="http://www.w3.org/1999/xhtml"
   xmlns:tr="http://transpect.io"
   xmlns:epub="http://transpect.io/epubtools"

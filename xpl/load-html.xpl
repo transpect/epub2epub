@@ -3,7 +3,7 @@
   xmlns:c="http://www.w3.org/ns/xproc-step"
   xmlns:cx="http://xmlcalabash.com/ns/extensions" 
   xmlns:tr="http://transpect.io"
-  xmlns:opf="http://www.idpf.org/2007/opf" 
+  xmlns:opf="http://www.idpf.org/2007/opf"
   xmlns:html="http://www.w3.org/1999/xhtml"
   xmlns:e2e="http://transpect.io/epub2epub"
   version="1.0" 
@@ -105,21 +105,17 @@
       <p:add-attribute match="/opf:epub" attribute-name="xml:base">
         <p:with-option name="attribute-value" select="$href"/>
       </p:add-attribute>
-      
-      <p:viewport match="/opf:epub/html:html" name="patch-html-viewport">
+              
+      <cx:message>
+        <p:with-option name="message" select="'[info] patch deprecated html elements and attributes'"/>
+      </cx:message>
         
-        <cx:message>
-          <p:with-option name="message" select="'[info] patch deprecated html elements and attributes'"/>
-        </cx:message>
-        
-        <p:xslt name="patch-html">
-          <p:input port="stylesheet">
-            <p:document href="../xsl/patch-html.xsl"/>
-          </p:input>
-          <p:with-param name="remove-chars-regex" select="$remove-chars-regex"/>
-        </p:xslt>
-        
-      </p:viewport>
+      <p:xslt name="patch-html">
+        <p:input port="stylesheet">
+          <p:document href="../xsl/patch-html.xsl"/>
+        </p:input>
+        <p:with-param name="remove-chars-regex" select="$remove-chars-regex"/>
+      </p:xslt>
       
       <p:identity name="html-plus-opf"/>
 

@@ -1,14 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
   xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  xmlns:opf="http://www.idpf.org/2007/opf"
+  xmlns:dc="http://purl.org/dc/elements/1.1/"
   xmlns="http://www.w3.org/1999/xhtml" 
   xpath-default-namespace="http://www.w3.org/1999/xhtml"
-  exclude-result-prefixes="xs"
+  exclude-result-prefixes="dc opf xs"
   version="3.0">
   
   <xsl:param name="remove-chars-regex" select="'\s'" as="xs:string"/>
   
   <xsl:mode on-no-match="shallow-copy"/>
+  
+  <xsl:template match="html[not(@lang)]">
+    <xsl:copy>
+      <xsl:attribute name="lang" select="(@lang, @xml:lang, lower-case(/opf:epub/opf:package/opf:metadata/dc:language))[1]"/>
+      <xsl:apply-templates select="@*, node()"/>
+    </xsl:copy>
+  </xsl:template>
   
   <xsl:template match="a/@href[contains(., '#')]">
     <xsl:attribute name="href" select="concat('#', substring-after(., '#'))"/>
