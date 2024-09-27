@@ -151,14 +151,14 @@
         </p:input>
       </p:xslt>
       
-      <tr:store-debug pipeline-step="epub2epub/06-custom-xslt">
+      <tr:store-debug pipeline-step="epub2epub/05-custom-xslt">
         <p:with-option name="active" select="$debug"/>
         <p:with-option name="base-uri" select="$debug-dir-uri"/>
       </tr:store-debug>
       
       <p:filter select="/opf:epub/html:html" name="filter-html"/>
       
-      <tr:store-debug pipeline-step="epub2epub/08-html-only">
+      <tr:store-debug pipeline-step="epub2epub/06-html-only">
         <p:with-option name="active" select="$debug"/>
         <p:with-option name="base-uri" select="$debug-dir-uri"/>
       </tr:store-debug>

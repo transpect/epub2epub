@@ -47,7 +47,7 @@
     <p:with-param name="toc-page" select="$toc-page"/>
   </p:xslt>
   
-  <tr:store-debug pipeline-step="epub2epub/06-ncx-to-nav">
+  <tr:store-debug pipeline-step="epub2epub/08-ncx-to-nav">
     <p:with-option name="active" select="$debug"/>
     <p:with-option name="base-uri" select="$debug-dir-uri"/>
   </tr:store-debug>
