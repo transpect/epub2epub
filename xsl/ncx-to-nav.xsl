@@ -31,6 +31,9 @@
     </xsl:copy>
   </xsl:template>
   
+  <xsl:template match="/opf:epub/html:html/html:body/html:div[@class eq 'epub-html-split'][following-sibling::*[1][self::html:div[@class eq 'cover-img']]]
+                      |/opf:epub/html:html/html:body/html:div[@class eq 'cover-img']"/>
+  
   <xsl:template match="$ncx/ncx:ncx">
     <nav role="doc-toc" epub:type="toc" id="toc">
       <xsl:apply-templates select="ncx:navMap"/>
@@ -46,9 +49,9 @@
   <xsl:template match="ncx:navPoint">
     <xsl:if test="normalize-space(.)">
       <li>
-        <a href="{if(contains(ncx:content/@src, '#'))
-                  then concat('#', substring-after(ncx:content/@src, '#'))
-                  else concat('#', key('id-from-filename', ncx:content/@src)/@id)}">
+        <a href="{if(contains(ncx:content/@src, '#'))          then concat('#', substring-after(ncx:content/@src, '#'))
+                  else if(contains(ncx:content/@src, 'cover')) then '#epub-cover-image-container'
+                  else                                              concat('#', key('id-from-filename', ncx:content/@src)/@id)}">
           <xsl:apply-templates select="ncx:navLabel/ncx:text"/>
         </a>
         <xsl:if test="ncx:navPoint">
