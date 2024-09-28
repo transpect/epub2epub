@@ -30,6 +30,18 @@
   <xsl:template match="head/@*
                       |meta[@http-equiv]"/>
   
+  <xsl:template match="a[not(normalize-space()) or matches(., '^\p{Zs}+$')][contains(@href, '#')]">
+    <span>
+      <xsl:apply-templates select="@* except @href, node()"/>
+    </span>
+  </xsl:template>
+  
+  <xsl:template match="*[matches(local-name(), '^h[1-6]$')][not(normalize-space()) or matches(., '^\p{Zs}+$')]">
+    <div>
+      <xsl:apply-templates select="@*, node()"/>
+    </div>
+  </xsl:template>
+  
   <xsl:template match="s
                       |strike">
     <span class="html-deprecated-s-tag" style="text-decoration: line-through;">
