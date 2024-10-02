@@ -85,6 +85,10 @@
           <p:with-option name="attribute-value" select="$idref"/>
         </p:add-attribute>
         
+        <p:add-attribute match="/html:html/html:body/*" attribute-name="xml:base">
+          <p:with-option name="attribute-value" select="base-uri()"/>
+        </p:add-attribute>
+        
       </p:for-each>
       
       <p:wrap-sequence wrapper="opf:epub" name="wrap-html"/>
@@ -110,7 +114,12 @@
       <cx:message>
         <p:with-option name="message" select="'[info] patch deprecated html elements and attributes'"/>
       </cx:message>
-        
+      
+      <tr:store-debug pipeline-step="epub2epub/03-html-plus-opf">
+        <p:with-option name="active" select="$debug"/>
+        <p:with-option name="base-uri" select="$debug-dir-uri"/>
+      </tr:store-debug>
+      
       <p:xslt name="patch-html">
         <p:input port="stylesheet">
           <p:document href="../xsl/patch-html.xsl"/>
@@ -119,11 +128,6 @@
       </p:xslt>
       
       <p:identity name="html-plus-opf"/>
-
-      <tr:store-debug pipeline-step="epub2epub/04-html-plus-opf">
-        <p:with-option name="active" select="$debug"/>
-        <p:with-option name="base-uri" select="$debug-dir-uri"/>
-      </tr:store-debug>
       
       <p:add-attribute name="copy-xml-base" attribute-name="xml:base" match="/opf:epub/html:html">
         <p:with-option name="attribute-value" select="/opf:epub/@xml:base"/>
@@ -132,6 +136,11 @@
       <p:add-attribute name="add-html-lang" attribute-name="lang" match="/opf:epub/html:html">
         <p:with-option name="attribute-value" select="$html-lang"/>
       </p:add-attribute>
+      
+      <tr:store-debug pipeline-step="epub2epub/04-html-plus-opf-patched">
+        <p:with-option name="active" select="$debug"/>
+        <p:with-option name="base-uri" select="$debug-dir-uri"/>
+      </tr:store-debug>
       
       <p:sink/>
       
