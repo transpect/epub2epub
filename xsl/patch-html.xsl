@@ -91,7 +91,7 @@
       <xsl:apply-templates select="@*, node()"/>
     </span>
   </xsl:template>
-  <!--rules-->
+  
   <xsl:template match="table[@border and not(@border = ('', '0'))]">
     <div class="html-deprecated-border-att" style="{concat('border: ', @border, 'px solid #000;')}">
       <xsl:copy>
@@ -166,6 +166,7 @@
                       |iframe/@frameborder
                       |link/@charset
                       |link/@rev
+                      |table/@rules
                       |@align
                       |@border[. = ('', '0')]
                       |@char
@@ -180,13 +181,15 @@
                       |@valign
                       |@width"/>
   
-  <!--<xsl:variable name="ids" select="//@id" as="attribute(id)*"/>
+  <!-- remove id duplicates -->
+  
+  <xsl:variable name="ids" select="//@id" as="attribute(id)*"/>
   
   <xsl:template match="@id[count(index-of($ids, .)) gt 1]">
     <xsl:variable name="id" select="."/>
     <xsl:if test="not(preceding::*[@id eq $id])">
       <xsl:copy-of select="."/>
     </xsl:if>
-  </xsl:template>-->
+  </xsl:template>
   
 </xsl:stylesheet>
