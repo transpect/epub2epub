@@ -13,15 +13,8 @@
   
   <xsl:param name="toc-page" as="xs:integer"/>
   
-  <xsl:variable name="epub" as="document-node(element(opf:epub))"
-                select="collection()[1]"/>
-  <xsl:variable name="ncx" as="document-node(element(ncx:ncx))"
-                select="collection()[2]"/>
-  
-  <xsl:variable name="manifest-items" as="element(opf:item)*" 
-                select="$epub/opf:epub/opf:package/opf:manifest/opf:item"/>
-  
-  <xsl:key name="id-from-filename" match="$manifest-items" use="@href"/>
+  <xsl:variable name="epub" select="collection()[1]" as="document-node(element(opf:epub))"/>
+  <xsl:variable name="ncx"  select="collection()[2]" as="document-node(element(ncx:ncx))"/>
   
   <xsl:template match="/opf:epub/html:html/html:body/html:div[@class eq 'epub-html-split'][position() = $toc-page]">
     <div class="epub-html-split"/>
@@ -48,10 +41,13 @@
   
   <xsl:template match="ncx:navPoint">
     <xsl:if test="normalize-space(.)">
+      <xsl:variable name="ncx-source" as="attribute(src)" select="ncx:content/@src"/>
+      <xsl:variable name="manifest-item" as="element(opf:item)"
+                    select="$epub/opf:epub/opf:package/opf:manifest/opf:item[@href = replace($ncx-source, '^(.+)#.+$', '$1')]"/>
       <li>
-        <a href="{if(contains(ncx:content/@src, '#'))          then concat('#', substring-after(ncx:content/@src, '#'))
-                  else if(contains(ncx:content/@src, 'cover')) then '#epub-cover-image-container'
-                  else                                              concat('#', key('id-from-filename', ncx:content/@src)/@id)}">
+        <a href="{if(contains(ncx:content/@src, 'cover')) 
+                  then '#epub-cover-image-container'
+                  else concat('#', $manifest-item/@id, '_', substring-after($ncx-source, '#'))}">
           <xsl:apply-templates select="ncx:navLabel/ncx:text"/>
         </a>
         <xsl:if test="ncx:navPoint">

@@ -12,6 +12,11 @@
   
   <xsl:mode on-no-match="shallow-copy"/>
   
+  <xsl:variable name="manifest-items" as="element(opf:item)*" 
+                select="/opf:epub/opf:package/opf:manifest/opf:item"/>
+  
+  <xsl:key name="item-from-filename" match="$manifest-items" use="@href"/>
+  
   <xsl:template match="html[not(@lang)]">
     <xsl:copy>
       <xsl:attribute name="lang" select="(@lang, @xml:lang, lower-case(/opf:epub/opf:package/opf:metadata/dc:language))[1]"/>
@@ -19,8 +24,16 @@
     </xsl:copy>
   </xsl:template>
   
+  <xsl:template match="/opf:epub/html/body/*/@xml:base"/>
+  
   <xsl:template match="a/@href[contains(., '#')]">
-    <xsl:attribute name="href" select="concat('#', substring-after(., '#'))"/>
+    <xsl:variable name="manifest-item" select="key('item-from-filename', substring-before(., '#'))" as="element(opf:item)?"/>
+    <xsl:attribute name="href" select="concat('#', $manifest-item/@id, '_', substring-after(., '#'))"/>
+  </xsl:template>
+  
+  <xsl:template match="/opf:epub/html/body//*[not(@class eq 'epub-html-split')]/@id[not(starts-with(., 'page_'))]">
+    <xsl:variable name="manifest-item" select="key('item-from-filename', replace(base-uri(), '^(.+/)(.+)$', '$2'))" as="element(opf:item)?"/>
+    <xsl:attribute name="id" select="concat($manifest-item/@id, '_', .)"/>
   </xsl:template>
   
   <xsl:template match="img/@src">
@@ -78,7 +91,7 @@
       <xsl:apply-templates select="@*, node()"/>
     </span>
   </xsl:template>
-  
+  <!--rules-->
   <xsl:template match="table[@border and not(@border = ('', '0'))]">
     <div class="html-deprecated-border-att" style="{concat('border: ', @border, 'px solid #000;')}">
       <xsl:copy>
@@ -167,13 +180,13 @@
                       |@valign
                       |@width"/>
   
-  <xsl:variable name="ids" select="//@id" as="attribute(id)*"/>
+  <!--<xsl:variable name="ids" select="//@id" as="attribute(id)*"/>
   
   <xsl:template match="@id[count(index-of($ids, .)) gt 1]">
     <xsl:variable name="id" select="."/>
     <xsl:if test="not(preceding::*[@id eq $id])">
       <xsl:copy-of select="."/>
     </xsl:if>
-  </xsl:template>
+  </xsl:template>-->
   
 </xsl:stylesheet>
