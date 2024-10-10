@@ -16,19 +16,21 @@
   <xsl:param name="remove-chars-regex" select="'\s'" as="xs:string"/>
   
   <xsl:template match="/opf:epub">
-    <xsl:variable name="cover-id" as="attribute(content)" 
-                  select="opf:package/opf:metadata/opf:meta[@name eq 'cover']/@content"/>
+    <xsl:variable name="cover-id" as="attribute(content)*" 
+                  select="opf:package/opf:metadata/opf:meta[@name = 'cover']/@content"/>
+    <xsl:variable name="cover-file" as="element(opf:item)" 
+                  select="opf:package/opf:manifest/opf:item[@id = $cover-id][1]"/>
     <epub-config format="{$epub-version}" 
-      layout="reflowable" 
-      css-handling="regenerated-per-split remove-comments"
-      css-parser="REx"
-      html-subdir-name="{$html-subdir-name}" 
-      indent="selective"
-      font-subset="false"
-      consider-headings-in-tables="false">
+                 layout="reflowable" 
+                 css-handling="regenerated-per-split remove-comments"
+                 css-parser="REx"
+                 html-subdir-name="{$html-subdir-name}" 
+                 indent="selective"
+                 font-subset="false"
+                 consider-headings-in-tables="false">
       
       <cover svg="true" svg-scale-hack="true" 
-             href="{replace(opf:package/opf:manifest/opf:item[@id eq $cover-id]/@href, $remove-chars-regex, '')}"/>
+             href="{replace($cover-file/@href, $remove-chars-regex, '')}"/>
       
       <types>
         <type name="toc" heading="Inhaltsverzeichnis" hidden="true" fallback-id-for-landmark="rendered_toc"/> 
