@@ -112,7 +112,7 @@
         <p:with-option name="attribute-value" select="concat($outdir, '/', $html-filename)"/>
       </p:add-attribute>
       
-      <tr:store-debug pipeline-step="epub2epub/08-copy-resources">
+      <tr:store-debug pipeline-step="epub2epub/10-copy-resources">
         <p:with-option name="active" select="$debug"/>
         <p:with-option name="base-uri" select="$debug-dir-uri"/>
       </tr:store-debug>
