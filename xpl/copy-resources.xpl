@@ -49,11 +49,24 @@
       <p:variable name="html-filename" 
                   select="replace(/opf:epub/@xml:base, '^.+/(.+?)\.epub$', '$1.html', 'i')"/>
       
+      <p:xslt name="patch-resource-locations">
+        <p:input port="stylesheet">
+          <p:document href="../xsl/patch-resource-locations.xsl"/>
+        </p:input>
+        <p:with-param name="html-filename" select="$html-filename"/>
+        <p:with-param name="outdir" select="$outdir"/>
+        <p:with-param name="remove-chars-regex" select="$remove-chars-regex"/>
+      </p:xslt>
+      
+      <tr:store-debug pipeline-step="epub2epub/10-patch-resources-locations">
+        <p:with-option name="active" select="$debug"/>
+        <p:with-option name="base-uri" select="$debug-dir-uri"/>
+      </tr:store-debug>
+      
       <p:for-each name="file-iteration">
-        <p:iteration-source select="/opf:epub/opf:package/opf:manifest/opf:item[not(@media-type = ('application/xhtml+xml', 
-                                                                                                   'application/x-dtbncx+xml'))]"/>
-        <p:variable name="path" select="resolve-uri(encode-for-uri(opf:item/@href), $opf-uri)"/>
-        <p:variable name="target" select="concat($outdir, '/', replace(opf:item/@href, $remove-chars-regex, ''))"/>
+        <p:iteration-source select="/opf:epub/c:files/c:file"/>
+        <p:variable name="path" select="c:file/@name"/>
+        <p:variable name="target" select="c:file/@target"/>
         
         <cx:message name="msg2">
           <p:with-option name="message" select="'[info] ', $path, ' => ', $target"/>
@@ -64,55 +77,23 @@
           <p:with-option name="target" select="$target"/>
         </pxf:copy>
         
-        <p:add-attribute match="/c:file" attribute-name="name" name="create-file-reference">
-          <p:input port="source">
-            <p:inline>
-              <c:file/>
-            </p:inline>
-          </p:input>
-          <p:with-option name="attribute-value" select="$target"/>
-        </p:add-attribute>
-        
       </p:for-each>
-      
-      <p:wrap-sequence wrapper="c:files" name="wrap-file-references"/>
       
       <p:store name="store-html">
         <p:input port="source" select="/opf:epub/html:html">
-          <p:pipe port="source" step="copy-resources"/>
+          <p:pipe port="result" step="patch-resource-locations"/>
         </p:input>
         <p:with-option name="href" select="concat($outdir, '/', $html-filename)"/>
       </p:store>
       
-      <p:insert position="first-child">
-        <p:input port="source">
-          <p:pipe port="result" step="wrap-file-references"/>
-        </p:input>
-        <p:input port="insertion">
-          <p:inline>
-            <c:file/>
-          </p:inline>
-        </p:input>
-      </p:insert>
-      
-      <p:add-attribute attribute-name="name" match="/c:files/c:file[not(@name)]" name="create-html-file-reference">
-        <p:with-option name="attribute-value" select="concat($outdir, '/', $html-filename)"/>
-      </p:add-attribute>
-      
-      <p:insert name="insert-files" match="/opf:epub" position="last-child">
-        <p:input port="insertion">
-          <p:pipe port="result" step="create-html-file-reference"/>
-        </p:input>
-        <p:input port="source">
-          <p:pipe port="source" step="copy-resources"/>
-        </p:input>
-      </p:insert>
-      
       <p:add-attribute match="/opf:epub/html:html" attribute-name="xml:base">
+        <p:input port="source">
+          <p:pipe port="result" step="patch-resource-locations"/>
+        </p:input>
         <p:with-option name="attribute-value" select="concat($outdir, '/', $html-filename)"/>
       </p:add-attribute>
       
-      <tr:store-debug pipeline-step="epub2epub/10-copy-resources">
+      <tr:store-debug pipeline-step="epub2epub/12-copy-resources">
         <p:with-option name="active" select="$debug"/>
         <p:with-option name="base-uri" select="$debug-dir-uri"/>
       </tr:store-debug>

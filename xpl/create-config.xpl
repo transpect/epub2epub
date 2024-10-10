@@ -53,7 +53,7 @@
     </p:input>
   </p:insert>
   
-  <tr:store-debug pipeline-step="epub2epub/10-epub-config">
+  <tr:store-debug pipeline-step="epub2epub/14-epub-config">
     <p:with-option name="active" select="$debug"/>
     <p:with-option name="base-uri" select="$debug-dir-uri"/>
   </tr:store-debug>
