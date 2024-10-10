@@ -30,8 +30,10 @@
   
   <p:variable name="toc-id" select="/opf:epub/opf:package/opf:spine/@toc"/>
   
+  <p:delete match="/opf:epub/html:html//html:nav[@epub:type eq 'landmarks']"/>
+  
   <p:choose>
-    <p:when test="not(opf:epub/html:html//html:nav[@epub:type eq 'toc'])">
+    <p:when test="not(/opf:epub/html:html//html:nav[@epub:type eq 'toc'])">
       
       <cx:message name="msg-1">
         <p:with-option name="message" select="'[info] create toc nav from ncx'"/>
@@ -39,8 +41,8 @@
       
       <p:load name="load-ncx">
         <p:with-option name="href"
-          select="resolve-uri(/opf:epub/opf:package/opf:manifest/opf:item[@id eq $toc-id]/@href,
-                              /opf:epub/opf:package/@xml:base)"/>
+                       select="resolve-uri(/opf:epub/opf:package/opf:manifest/opf:item[@id eq $toc-id]/@href,
+                                           /opf:epub/opf:package/@xml:base)"/>
       </p:load>
       
       <p:sink/>
