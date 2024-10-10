@@ -51,7 +51,10 @@
                                       /ocf:container/ocf:rootfiles/ocf:rootfile/@full-path)"/>
       </p:load>
       
-      <p:delete match="/opf:package/opf:metadata/dc:*[not(normalize-space())]" name="remove-empty-metadata" cx:depends-on="load-opf"/>
+      <p:delete match="/opf:package/opf:metadata/dc:*[not(normalize-space())]
+                      |/opf:package/opf:metadata/opf:meta[not(@name eq 'cover')]
+                      |/opf:package/opf:guide" 
+                name="remove-empty-metadata" cx:depends-on="load-opf"/>
       
       <p:add-xml-base name="add-xml-base"/>
 
