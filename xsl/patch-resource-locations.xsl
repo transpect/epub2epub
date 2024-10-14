@@ -39,7 +39,8 @@
   <xsl:template match="html:html//*/@*[local-name() = $fileref-att-names]
                                       [not(starts-with(., '#'))]
                                       [not(starts-with(., 'http'))]
-                                      [not(starts-with(., 'www.'))]">
+                                      [not(starts-with(., 'www.'))]
+                                      [not(matches(., '\.x?html$', 'i'))]">
     <xsl:param name="resources" as="element(c:file)*" tunnel="yes"/>
     <xsl:variable name="fileref" select="replace(., '\.\./', '')" as="xs:string"/>
     <xsl:variable name="normalized-fileref" as="element(c:file)" 
