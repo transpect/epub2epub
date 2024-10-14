@@ -9,6 +9,7 @@
   version="3.0">
   
   <xsl:param name="remove-chars-regex" select="'\s'" as="xs:string"/>
+  <xsl:param name="html-lang" as="xs:string?"/>
   
   <xsl:mode on-no-match="shallow-copy"/>
   
@@ -19,8 +20,8 @@
   
   <xsl:template match="html[not(@lang)]">
     <xsl:copy>
-      <xsl:attribute name="lang" select="(@xml:lang, lower-case(/opf:epub/opf:package/opf:metadata/dc:language))[1]"/>
-      <xsl:apply-templates select="@*, node()"/>
+      <xsl:attribute name="lang" select="(@xml:lang, lower-case(/opf:epub/opf:package/opf:metadata/dc:language), $html-lang)[1]"/>
+      <xsl:apply-templates select="@* except @lang, node()"/>
     </xsl:copy>
   </xsl:template>
   
@@ -189,7 +190,8 @@
   
   <xsl:variable name="ids" select="//@id" as="attribute(id)*"/>
   
-  <xsl:template match="@id[count(index-of($ids, .)) gt 1]">
+  <xsl:template match="@id[count(index-of($ids, .)) gt 1]
+                          [for $id in @id return preceding::*[@id eq $id]]" priority="5">
     <xsl:variable name="id" select="."/>
     <xsl:if test="not(preceding::*[@id eq $id])">
       <xsl:copy-of select="."/>

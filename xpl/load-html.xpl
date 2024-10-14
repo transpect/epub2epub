@@ -125,16 +125,11 @@
           <p:document href="../xsl/patch-html.xsl"/>
         </p:input>
         <p:with-param name="remove-chars-regex" select="$remove-chars-regex"/>
+        <p:with-param name="html-lang" select="$html-lang"/>
       </p:xslt>
-      
-      <p:identity name="html-plus-opf"/>
       
       <p:add-attribute name="copy-xml-base" attribute-name="xml:base" match="/opf:epub/html:html">
         <p:with-option name="attribute-value" select="/opf:epub/@xml:base"/>
-      </p:add-attribute>
-      
-      <p:add-attribute name="add-html-lang" attribute-name="lang" match="/opf:epub/html:html">
-        <p:with-option name="attribute-value" select="$html-lang"/>
       </p:add-attribute>
       
       <tr:store-debug pipeline-step="epub2epub/04-html-plus-opf-patched">
@@ -150,7 +145,7 @@
       
       <p:xslt name="apply-custom-xslt">
         <p:input port="source">
-          <p:pipe port="result" step="add-html-lang"/>
+          <p:pipe port="result" step="copy-xml-base"/>
         </p:input>
         <p:input port="stylesheet">
           <p:pipe port="result" step="load-custom-xslt"/>
