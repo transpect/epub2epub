@@ -19,9 +19,13 @@
   
   <xsl:template match="html[not(@lang)]">
     <xsl:copy>
-      <xsl:attribute name="lang" select="(@lang, @xml:lang, lower-case(/opf:epub/opf:package/opf:metadata/dc:language))[1]"/>
+      <xsl:attribute name="lang" select="(@xml:lang, lower-case(/opf:epub/opf:package/opf:metadata/dc:language))[1]"/>
       <xsl:apply-templates select="@*, node()"/>
     </xsl:copy>
+  </xsl:template>
+  
+  <xsl:template match="*[@lang and @xml:lang][@lang != @xml:lang]/@lang">
+    <xsl:attribute name="lang" select="@xml:lang"/>
   </xsl:template>
   
   <xsl:template match="/opf:epub/html/body/*/@xml:base"/>
