@@ -40,9 +40,11 @@
                                       [not(starts-with(., '#'))]
                                       [not(starts-with(., 'http'))]
                                       [not(starts-with(., 'www.'))]
+                                      [not(starts-with(., 'mailto:'))]
                                       [not(matches(., '\.x?html$', 'i'))]">
     <xsl:param name="resources" as="element(c:file)*" tunnel="yes"/>
     <xsl:variable name="fileref" select="replace(., '\.\./', '')" as="xs:string"/>
+    <xsl:message select="'#####', xs:string(.)"></xsl:message>
     <xsl:variable name="normalized-fileref" as="element(c:file)" 
                   select="$resources[matches(@opf-name, $fileref)]"/>
     <xsl:attribute name="{local-name()}" select="$normalized-fileref/@opf-name"/>
