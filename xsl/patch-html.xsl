@@ -41,6 +41,13 @@
     <xsl:attribute name="id" select="concat($manifest-item/@id, '_', .)"/>
   </xsl:template>
   
+  <xsl:template match="img[not(@alt)]">
+    <xsl:copy>
+      <xsl:attribute name="alt"/>
+      <xsl:apply-templates select="@*, node()"/>
+    </xsl:copy>
+  </xsl:template>
+  
   <xsl:template match="img/@src">
     <xsl:attribute name="{name()}" select="replace(., $remove-chars-regex, '')"/>
   </xsl:template>
