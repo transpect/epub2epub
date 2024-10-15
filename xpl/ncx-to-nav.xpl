@@ -30,7 +30,7 @@
   
   <p:variable name="toc-id" select="/opf:epub/opf:package/opf:spine/@toc"/>
   
-  <p:delete match="/opf:epub/html:html//html:nav[@epub:type eq 'landmarks']"/>
+  <p:delete match="/opf:epub/html:html//html:nav[@epub:type eq 'landmarks']" name="del-landmarks"/>
   
   <p:choose>
     <p:when test="not(/opf:epub/html:html//html:nav[@epub:type eq 'toc'])">
@@ -45,13 +45,21 @@
                                            /opf:epub/opf:package/@xml:base)"/>
       </p:load>
       
-      <p:sink/>
-      
-      <p:xslt name="transform-ncx">
+      <p:insert match="/opf:epub/opf:package" position="after" name="insert-ncx">
         <p:input port="source">
-          <p:pipe port="source" step="e2e-ncx-to-nav"/>
+          <p:pipe port="result" step="del-landmarks"/>
+        </p:input>
+        <p:input port="insertion">
           <p:pipe port="result" step="load-ncx"/>
         </p:input>
+      </p:insert>
+      
+      <tr:store-debug pipeline-step="epub2epub/07-html-plus-opf-plus-ncx">
+        <p:with-option name="active" select="$debug"/>
+        <p:with-option name="base-uri" select="$debug-dir-uri"/>
+      </tr:store-debug>
+      
+      <p:xslt name="transform-ncx">
         <p:input port="stylesheet">
           <p:document href="../xsl/ncx-to-nav.xsl"/>
         </p:input>
