@@ -14,7 +14,8 @@
                                      else unparsed-text($href, 'cp1252')" as="xs:string?"/>
     <c:data content-type="text/plain">
       <xsl:value-of select="tr:patch-css($css)"/>
-      <xsl:text>ol.toc-level-1, ol.toc-level-2, ol.toc-level-3, ol.toc-level-4, ol.toc-level-5, ol.toc-level-6, ol.toc-level-7, ol.toc-level-8, ol.toc-level-9 { list-style:none }</xsl:text>
+      <!-- do not display list styles for generated nav toc -->
+      <xsl:text>nav ol, ol.toc-level-1, ol.toc-level-2, ol.toc-level-3, ol.toc-level-4, ol.toc-level-5, ol.toc-level-6, ol.toc-level-7, ol.toc-level-8, ol.toc-level-9 { list-style:none }</xsl:text>
     </c:data>
   </xsl:template>
   
