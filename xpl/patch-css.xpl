@@ -2,6 +2,7 @@
 <p:declare-step xmlns:p="http://www.w3.org/ns/xproc" 
   xmlns:c="http://www.w3.org/ns/xproc-step"
   xmlns:cx="http://xmlcalabash.com/ns/extensions" 
+  xmlns:pxf="http://exproc.org/proposed/steps/file"
   xmlns:tr="http://transpect.io"
   xmlns:opf="http://www.idpf.org/2007/opf" 
   xmlns:html="http://www.w3.org/1999/xhtml"
@@ -37,12 +38,13 @@
       <p:for-each name="spine-iteration">
         <p:iteration-source select="/opf:epub/opf:package/opf:manifest/opf:item[@media-type eq 'text/css'][ends-with(@href, '.css')]"/>
         <p:variable name="css-uri" select="resolve-uri(opf:item/@href, $opf-uri)"/>
+        <p:variable name="css-out-uri" select="replace($css-uri, '\.css$', '-new.css', 'i')"/>
         
         <cx:message>
           <p:with-option name="message" select="'[info] patch CSS: ', $css-uri"/>
         </cx:message>
         
-        <p:xslt template-name="main">
+        <p:xslt template-name="main" name="patch-css">
           <p:input port="stylesheet">
             <p:document href="../xsl/patch-css.xsl"/>
           </p:input>
@@ -55,8 +57,12 @@
           <p:with-option name="base-uri" select="$debug-dir-uri"/>
         </tr:store-debug>
         
-        <p:store method="text" media-type="text/plain">
-          <p:with-option name="href" select="$css-uri"/>
+        <cx:message>
+          <p:with-option name="message" select="'[info] store CSS: ', $css-out-uri"/>
+        </cx:message>
+        
+        <p:store method="text" media-type="text/plain" encoding="utf8" cx:depends-on="patch-css">
+          <p:with-option name="href" select="$css-out-uri"/>
         </p:store>
         
       </p:for-each>
@@ -66,6 +72,38 @@
           <p:pipe port="source" step="e2e-patch-css"/>
         </p:input>
       </p:identity>
+      
+      <p:viewport match="/opf:epub/opf:package/opf:manifest/opf:item[@media-type eq 'text/css'][ends-with(@href, '.css')]">
+        <p:variable name="css-href" select="opf:item/@href"/>
+        <p:variable name="css-out-href" select="replace($css-href, '\.css$', '-new.css', 'i')"/>
+        
+        <p:add-attribute match="opf:item" attribute-name="href">
+          <p:with-option name="attribute-value" select="$css-out-href"/>
+        </p:add-attribute>
+        
+      </p:viewport>
+      
+      <p:viewport match="/opf:epub/html:html/html:head/html:link[@rel eq 'stylesheet']">
+        <p:variable name="css-href" select="html:link/@href"/>
+        <p:variable name="css-out-href" select="replace($css-href, '\.css$', '-new.css', 'i')"/>
+        
+        <cx:message>
+          <p:with-option name="message" select="'[info] rename CSS: references ', $css-out-href"/>
+        </cx:message>
+        
+        <p:add-attribute match="html:link" attribute-name="href">
+          <p:with-option name="attribute-value" select="$css-out-href"/>
+        </p:add-attribute>
+        
+      </p:viewport>
+
+      <tr:store-debug name="debug-xy">
+        <p:with-option name="pipeline-step" select="'epub2epub/___after-css'"/>
+        <p:with-option name="active" select="$debug"/>
+        <p:with-option name="base-uri" select="$debug-dir-uri"/>
+      </tr:store-debug>
+
+      <p:identity/>
 
     </p:group>
     <p:catch name="catch">
