@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <p:declare-step xmlns:p="http://www.w3.org/ns/xproc" 
   xmlns:c="http://www.w3.org/ns/xproc-step"
+  xmlns:cx="http://xmlcalabash.com/ns/extensions" 
   xmlns:tr="http://transpect.io"
   xmlns:e2e="http://transpect.io/epub2epub"
   version="1.0" 
@@ -24,7 +25,12 @@
   <p:option name="pipeline-step"/>
   <p:option name="terminate-on-error" select="'no'"/>
   
+  <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl"/>
   <p:import href="http://transpect.io/xproc-util/store-debug/xpl/store-debug.xpl"/>
+  
+  <cx:message name="err-to-stdout">
+    <p:with-option name="message" select="'[ERROR] ', string-join(.)"/>
+  </cx:message>
   
   <p:choose name="terminate-or-continue-on-error">
     <p:when test="$terminate-on-error eq 'yes'">
