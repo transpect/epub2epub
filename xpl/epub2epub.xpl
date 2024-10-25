@@ -170,20 +170,20 @@
       <p:with-option name="terminate-on-error" select="$terminate-on-error"/>
     </e2e:load-html>
     
-    <e2e:patch-css name="patch-css">
+    <e2e:patch-css name="patch-css" cx:depends-on="load-html">
       <p:with-option name="href" select="$epub-href"/>
       <p:with-option name="debug" select="$debug"/>
       <p:with-option name="debug-dir-uri" select="$debug-dir-uri"/>
       <p:with-option name="terminate-on-error" select="$terminate-on-error"/>
     </e2e:patch-css>
     
-    <e2e:ncx-to-nav name="ncx-to-nav" cx:depends-on="load-html">
+    <e2e:ncx-to-nav name="ncx-to-nav" cx:depends-on="patch-css">
       <p:with-option name="toc-page" select="$toc-page"/>
       <p:with-option name="debug" select="$debug"/>
       <p:with-option name="debug-dir-uri" select="$debug-dir-uri"/>
     </e2e:ncx-to-nav>
     
-    <e2e:copy-resources name="copy-resources">
+    <e2e:copy-resources name="copy-resources" cx:depends-on="ncx-to-nav">
       <p:with-option name="outdir" select="$outdir-href"/>
       <p:with-option name="remove-chars-regex" select="$remove-chars-regex"/>
       <p:with-option name="debug" select="$debug"/>
