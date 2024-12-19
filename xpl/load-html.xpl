@@ -98,6 +98,14 @@
           <p:pipe port="result" step="wrap-html"/>
         </p:input>
       </p:insert>
+      
+      <p:delete match="/opf:epub/html:html[1]/html:head/html:link" name="temporarily-delete-css-ref"/>
+      
+      <p:insert match="/opf:epub/html:html[1]/html:head" position="last-child" name="insert-html-css-refs">
+        <p:input port="insertion" select="/opf:epub/html:html/html:head/html:link[not(@href = preceding::html:link/@href)]">
+          <p:pipe port="result" step="wrap-html"/>
+        </p:input>
+      </p:insert>
 
       <p:delete match="/opf:epub/html:html[position() ne 1]" name="delete-rest"/>
       
