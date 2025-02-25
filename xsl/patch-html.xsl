@@ -2,6 +2,7 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
   xmlns:xs="http://www.w3.org/2001/XMLSchema"
   xmlns:opf="http://www.idpf.org/2007/opf"
+  xmlns:epub="http://www.idpf.org/2007/ops"
   xmlns:dc="http://purl.org/dc/elements/1.1/"
   xmlns="http://www.w3.org/1999/xhtml" 
   xpath-default-namespace="http://www.w3.org/1999/xhtml"
@@ -15,6 +16,15 @@
   
   <xsl:variable name="manifest-items" as="element(opf:item)*" 
                 select="/opf:epub/opf:package/opf:manifest/opf:item"/>
+  
+  <xsl:variable name="toc-ids" as="xs:string*" 
+                select="/opf:epub/html//nav[@epub:type = 'toc']/generate-id()"/>
+  
+  <xsl:variable name="landmark-ids" as="xs:string*" 
+                select="/opf:epub/html//nav[@epub:type = 'landmarks']/generate-id()"/>
+  
+  <xsl:variable name="page-list-ids" as="xs:string*" 
+                select="/opf:epub/html//nav[@epub:type = 'page-list']/generate-id()"/>
   
   <xsl:key name="item-from-filename" match="$manifest-items" use="@href"/>
   
@@ -178,6 +188,9 @@
                       |iframe/@frameborder
                       |link/@charset
                       |link/@rev
+                      |nav[@epub:type = 'toc'][index-of($toc-ids, generate-id()) != 1]
+                      |nav[@epub:type = 'landmarks'][index-of($landmark-ids, generate-id()) != 1]
+                      |nav[@epub:type = 'page-list'][index-of($page-list-ids, generate-id()) != 1]
                       |table/@rules
                       |@align
                       |@border[. = ('', '0')]
