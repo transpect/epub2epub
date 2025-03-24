@@ -74,6 +74,11 @@
       Page index after there the toc is inserted
     </p:documentation>
   </p:option>
+  <p:option name="hide-toc" select="'no'">
+    <p:documentation>
+      Whether the generated HTML toc should be hidden.
+    </p:documentation>
+  </p:option>
   <p:option name="remove-chars-regex" select="'([\p{Zs}]|%20)'">
     <p:documentation>
       Regular expression which matches characters to be deleted in filenames
@@ -179,6 +184,7 @@
     
     <e2e:ncx-to-nav name="ncx-to-nav" cx:depends-on="patch-css">
       <p:with-option name="toc-page" select="$toc-page"/>
+      <p:with-option name="hide-toc" select="$hide-toc"/>
       <p:with-option name="debug" select="$debug"/>
       <p:with-option name="debug-dir-uri" select="$debug-dir-uri"/>
     </e2e:ncx-to-nav>

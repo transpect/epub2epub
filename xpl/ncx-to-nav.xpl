@@ -22,6 +22,7 @@
   </p:output>
   
   <p:option name="toc-page" select="4"/>
+  <p:option name="hide-toc" select="'no'"/>
   <p:option name="debug" select="'no'"/>
   <p:option name="debug-dir-uri" select="'debug'"/>
 
@@ -63,6 +64,7 @@
         <p:input port="stylesheet">
           <p:document href="../xsl/ncx-to-nav.xsl"/>
         </p:input>
+        <p:with-param name="hide-toc" select="$hide-toc"/>
         <p:with-param name="toc-page" select="$toc-page"/>
       </p:xslt>
       

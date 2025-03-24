@@ -11,6 +11,7 @@
   
   <xsl:mode on-no-match="shallow-copy"/>
   
+  <xsl:param name="hide-toc" as="xs:string"/>
   <xsl:param name="toc-page" as="xs:integer"/>
   
   <xsl:variable name="epub" select="/opf:epub"         as="element(opf:epub)"/>
@@ -29,6 +30,9 @@
   
   <xsl:template match="ncx:ncx">
     <nav role="doc-toc" epub:type="toc" id="toc">
+      <xsl:if test="$hide-toc eq 'yes'">
+        <xsl:attribute name="hidden" select="'hidden'"/>
+      </xsl:if>
       <xsl:apply-templates select="ncx:navMap"/>
     </nav>
   </xsl:template>
