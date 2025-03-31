@@ -71,7 +71,18 @@
     </p:when>
     <p:otherwise>
       
-      <p:identity/>
+      <p:choose>
+        <p:when test="$hide-toc eq 'yes'">
+          
+          <p:add-attribute match="/opf:epub/html:html//html:nav[@epub:type eq 'toc']" attribute-name="hidden" attribute-value="hidden"/>
+          
+        </p:when>
+        <p:otherwise>
+          
+          <p:identity/>
+          
+        </p:otherwise>
+      </p:choose>
       
       <cx:message name="msg-2">
         <p:with-option name="message" select="'[info] toc nav found, skip creating toc nav from ncx'"/>
