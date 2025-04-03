@@ -79,6 +79,11 @@
       Whether the generated HTML toc should be hidden.
     </p:documentation>
   </p:option>
+  <p:option name="remove-cover" select="'no'">
+    <p:documentation>
+      Whether the cover should be removed or not.
+    </p:documentation>
+  </p:option>
   <p:option name="ignore-files" select="''">
     <p:documentation>
       Whitespace-separated list of OPF manifest items that are not considered for the conversion.
@@ -164,6 +169,7 @@
     </e2e:unzip>
     
     <e2e:load-rootfile name="load-rootfile">
+      <p:with-option name="remove-cover" select="$remove-cover"/>
       <p:with-option name="ignore-files" select="$ignore-files"/>
       <p:with-option name="debug" select="$debug"/>
       <p:with-option name="debug-dir-uri" select="$debug-dir-uri"/>
@@ -175,6 +181,7 @@
       <p:with-option name="xslt-href" select="/c:result/@local-href">
         <p:pipe port="result" step="normalize-xslt-path"/>
       </p:with-option>
+      <p:with-option name="remove-cover" select="$remove-cover"/>
       <p:with-option name="remove-chars-regex" select="$remove-chars-regex"/>
       <p:with-option name="html-lang" select="$html-lang"/>
       <p:with-option name="debug" select="$debug"/>

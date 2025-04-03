@@ -4,6 +4,7 @@
   xmlns:cx="http://xmlcalabash.com/ns/extensions" 
   xmlns:tr="http://transpect.io"
   xmlns:opf="http://www.idpf.org/2007/opf"
+  xmlns:epub="http://www.idpf.org/2007/ops"
   xmlns:html="http://www.w3.org/1999/xhtml"
   xmlns:e2e="http://transpect.io/epub2epub"
   version="1.0" 
@@ -34,6 +35,7 @@
   </p:output>
   
   <p:option name="href"/>
+  <p:option name="remove-cover" select="'no'"/>
   <p:option name="remove-chars-regex" select="'\s'"/>
   <p:option name="html-lang" select="'en'"/>
   <p:option name="xslt-href" select="'../xsl/custom-xslt-placeholder.xsl'"/>
@@ -72,6 +74,20 @@
         <p:load name="load-individual-html-file">
           <p:with-option name="href" select="resolve-uri($path, $opf-uri)"/>
         </p:load>
+        
+        <p:choose name="choose-to-wrap-cover">
+          <p:when test="    $remove-cover eq 'yes' 
+                        and //*[local-name() = ('figure', 'img')][@epub:type eq 'cover' or @role eq 'doc-cover']">
+            
+            <p:wrap match="/html:html" wrapper="tr:cover"/>
+                        
+          </p:when>
+          <p:otherwise>
+            
+            <p:identity/>
+            
+          </p:otherwise>
+        </p:choose>
         
         <p:insert match="/html:html/html:body" position="first-child" name="insert-split-point">
           <p:input port="insertion">
@@ -118,7 +134,24 @@
       <p:add-attribute match="/opf:epub" attribute-name="xml:base">
         <p:with-option name="attribute-value" select="$href"/>
       </p:add-attribute>
-              
+      
+      <p:choose name="choose-to-remove-cover">
+        <p:when test="$remove-cover eq 'yes'">
+          
+          <p:delete match="/opf:epub/tr:cover
+                          |/opf:epub/opf:package/opf:manifest/opf:item[@id eq /opf:epub/tr:cover/html:html/html:body/html:div/@id]
+                          |/opf:epub/opf:package/opf:spine/opf:itemref[@idref eq /opf:epub/tr:cover/html:html/html:body/html:div/@id]"/>
+          
+        </p:when>
+        <p:otherwise>
+          
+          <p:identity/>
+          
+        </p:otherwise>
+      </p:choose>
+      
+      <p:delete match="/opf:epub/tr:cover/html:html/@tr:id"/>
+      
       <cx:message>
         <p:with-option name="message" select="'[info] patch deprecated html elements and attributes'"/>
       </cx:message>
@@ -134,6 +167,7 @@
         </p:input>
         <p:with-param name="remove-chars-regex" select="$remove-chars-regex"/>
         <p:with-param name="html-lang" select="$html-lang"/>
+        <p:with-param name="remove-cover" select="$remove-cover"/>
       </p:xslt>
       
       <p:add-attribute name="copy-xml-base" attribute-name="xml:base" match="/opf:epub/html:html">

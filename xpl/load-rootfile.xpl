@@ -23,12 +23,8 @@
     <p:pipe port="report" step="try-load-rootfile"/>
   </p:output>
   
-  <p:option name="ignore-files" select="''">
-    <p:documentation>
-      Whitespace-separated list of OPF manifest items that are not considered for the conversion.
-    </p:documentation>
-  </p:option>
-  
+  <p:option name="remove-cover" select="'no'"/>
+  <p:option name="ignore-files" select="''"/>
   <p:option name="debug" select="'no'"/>
   <p:option name="debug-dir-uri" select="'debug'"/>
   <p:option name="terminate-on-error" select="'no'"/>
@@ -66,22 +62,33 @@
                             xmlns:xs="http://www.w3.org/2001/XMLSchema"
                             version="3.0">
               
+              <xsl:param name="remove-cover" as="xs:string"/>
               <xsl:param name="ignore-files" as="xs:string?"/>
               <xsl:variable name="ignore-files-list" as="xs:string*" 
                             select="for $file in tokenize($ignore-files, '\s') 
                                     return replace($file, '^OEBPS/', '')"/>
+              <xsl:variable name="cover-id" as="attribute(id)?" 
+                            select="/opf:package/opf:manifest/opf:item[   @properties eq 'cover-image' 
+                                                                       or @id = /opf:package/opf:metadata/opf:meta[@name eq 'cover']/@content]/@id"/>
+              <xsl:variable name="cover-html-id" as="attribute(id)?" 
+                            select="/opf:package/opf:manifest/opf:item[/opf:package/opf:guide/opf:reference[@type eq 'cover']/@href eq @href]/@id"/>
               
               <xsl:mode on-no-match="shallow-copy"/>
               
               <xsl:template match="opf:metadata/dc:*[not(normalize-space())]
-                                  |opf:metadata/opf:meta[not(@name eq 'cover')]
+                                  |opf:metadata/opf:meta[not(@name = 'cover') or (@name = 'cover' and $remove-cover = 'yes')]
                                   |opf:guide
-                                  |opf:manifest/opf:item[@href = $ignore-files-list]
-                                  |opf:spine/opf:itemref[@idref = /opf:package/opf:manifest/opf:item[@href = $ignore-files-list]/@id]"/>
+                                  |opf:manifest/opf:item[@href  = $ignore-files-list]
+                                  |opf:manifest/opf:item[@id    = $ignore-files-list]
+                                  |opf:spine/opf:itemref[@idref = /opf:package/opf:manifest/opf:item[@href = $ignore-files-list]/@id]
+                                  |opf:manifest/opf:item[@id    = ($cover-id, $cover-html-id)][$remove-cover = 'yes']
+                                  |opf:spine/opf:itemref[@idref = ($cover-id, $cover-html-id)][$remove-cover = 'yes']">
+              </xsl:template>
               
             </xsl:stylesheet>
           </p:inline>
         </p:input>
+        <p:with-param name="remove-cover" select="$remove-cover"/>
         <p:with-param name="ignore-files" select="$ignore-files"/>
       </p:xslt>
 
