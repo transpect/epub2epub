@@ -62,9 +62,6 @@
     <xsl:attribute name="{name()}" select="replace(., $remove-chars-regex, '')"/>
   </xsl:template>
   
-  <xsl:template match="head/@*
-                      |meta[@http-equiv]"/>
-  
   <xsl:template match="a[not(normalize-space()) or matches(., '^\p{Zs}+$')][contains(@href, '#')]">
     <span>
       <xsl:apply-templates select="@* except @href, node()"/>
@@ -179,6 +176,7 @@
                       |body/@text
                       |body/@vlink
                       |br/@clear
+                      |head/@*
                       |hr/@noshade
                       |hr/@size
                       |html/@version
@@ -188,6 +186,7 @@
                       |iframe/@frameborder
                       |link/@charset
                       |link/@rev
+                      |meta[@http-equiv]
                       |nav[@epub:type = 'toc'][index-of($toc-ids, generate-id()) != 1]
                       |nav[@epub:type = 'landmarks'][index-of($landmark-ids, generate-id()) != 1]
                       |nav[@epub:type = 'page-list'][index-of($page-list-ids, generate-id()) != 1]
