@@ -84,7 +84,7 @@
       Whether the cover should be removed or not.
     </p:documentation>
   </p:option>
-  <p:option name="ignore-files" select="''">
+  <p:option name="remove-files-list" select="''">
     <p:documentation>
       Whitespace-separated list of OPF manifest items that are not considered for the conversion.
     </p:documentation>
@@ -162,7 +162,7 @@
     <e2e:unzip name="unzip">
       <p:with-option name="href" select="$epub-href"/>
       <p:with-option name="outdir" select="$tmpdir"/>
-      <p:with-option name="ignore-files" select="$ignore-files"/>
+      <p:with-option name="remove-files-list" select="$remove-files-list"/>
       <p:with-option name="debug" select="$debug"/>
       <p:with-option name="debug-dir-uri" select="$debug-dir-uri"/>
       <p:with-option name="terminate-on-error" select="$terminate-on-error"/>
@@ -170,7 +170,7 @@
     
     <e2e:load-rootfile name="load-rootfile">
       <p:with-option name="remove-cover" select="$remove-cover"/>
-      <p:with-option name="ignore-files" select="$ignore-files"/>
+      <p:with-option name="remove-files-list" select="$remove-files-list"/>
       <p:with-option name="debug" select="$debug"/>
       <p:with-option name="debug-dir-uri" select="$debug-dir-uri"/>
       <p:with-option name="terminate-on-error" select="$terminate-on-error"/>

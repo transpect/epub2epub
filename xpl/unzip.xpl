@@ -16,7 +16,7 @@
 
   <p:option name="href" required="true"/>
   <p:option name="outdir" required="true"/>
-  <p:option name="ignore-files" select="''"/>
+  <p:option name="remove-files-list" select="''"/>
   <p:option name="debug" select="'no'"/>
   <p:option name="debug-dir-uri" select="'debug'"/>
   <p:option name="status-dir-uri" select="'status'"/>
@@ -42,26 +42,26 @@
       </tr:unzip>
       
       <cx:message>
-        <p:with-option name="message" select="'[info] exclude files: ', $ignore-files"/>
+        <p:with-option name="message" select="'[info] exclude files: ', $remove-files-list"/>
       </cx:message>
       
-      <p:xslt name="ignore-files" cx:depends-on="unzip-epub">
+      <p:xslt name="remove-files-list" cx:depends-on="unzip-epub">
         <p:input port="stylesheet">
           <p:inline>
             <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" 
                             xmlns:xs="http://www.w3.org/2001/XMLSchema"
                             version="3.0">
               
-              <xsl:param name="ignore-files" as="xs:string?"/>
+              <xsl:param name="remove-files-list" as="xs:string?"/>
               
               <xsl:mode on-no-match="shallow-copy"/>
               
-              <xsl:template match="/c:files/c:file[@name = tokenize($ignore-files, '\s')]"/>
+              <xsl:template match="/c:files/c:file[@name = tokenize($remove-files-list, '\s')]"/>
               
             </xsl:stylesheet>
           </p:inline>
         </p:input>
-        <p:with-param name="ignore-files" select="$ignore-files"/>
+        <p:with-param name="remove-files-list" select="$remove-files-list"/>
       </p:xslt>
       
       <cx:message>

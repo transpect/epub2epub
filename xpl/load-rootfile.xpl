@@ -24,7 +24,7 @@
   </p:output>
   
   <p:option name="remove-cover" select="'no'"/>
-  <p:option name="ignore-files" select="''"/>
+  <p:option name="remove-files-list" select="''"/>
   <p:option name="debug" select="'no'"/>
   <p:option name="debug-dir-uri" select="'debug'"/>
   <p:option name="terminate-on-error" select="'no'"/>
@@ -63,9 +63,9 @@
                             version="3.0">
               
               <xsl:param name="remove-cover" as="xs:string"/>
-              <xsl:param name="ignore-files" as="xs:string?"/>
-              <xsl:variable name="ignore-files-list" as="xs:string*" 
-                            select="for $file in tokenize($ignore-files, '\s') 
+              <xsl:param name="remove-files-list" as="xs:string?"/>
+              <xsl:variable name="remove-files-list-list" as="xs:string*" 
+                            select="for $file in tokenize($remove-files-list, '\s') 
                                     return replace($file, '^OEBPS/', '')"/>
               <xsl:variable name="cover-id" as="attribute(id)?" 
                             select="/opf:package/opf:manifest/opf:item[   @properties eq 'cover-image' 
@@ -78,9 +78,9 @@
               <xsl:template match="opf:metadata/dc:*[not(normalize-space())]
                                   |opf:metadata/opf:meta[not(@name = 'cover') or (@name = 'cover' and $remove-cover = 'yes')]
                                   |opf:guide
-                                  |opf:manifest/opf:item[@href  = $ignore-files-list]
-                                  |opf:manifest/opf:item[@id    = $ignore-files-list]
-                                  |opf:spine/opf:itemref[@idref = /opf:package/opf:manifest/opf:item[@href = $ignore-files-list]/@id]
+                                  |opf:manifest/opf:item[@href  = $remove-files-list-list]
+                                  |opf:manifest/opf:item[@id    = $remove-files-list-list]
+                                  |opf:spine/opf:itemref[@idref = /opf:package/opf:manifest/opf:item[@href = $remove-files-list-list]/@id]
                                   |opf:manifest/opf:item[@id    = ($cover-id, $cover-html-id)][$remove-cover = 'yes']
                                   |opf:spine/opf:itemref[@idref = ($cover-id, $cover-html-id)][$remove-cover = 'yes']">
               </xsl:template>
@@ -89,7 +89,7 @@
           </p:inline>
         </p:input>
         <p:with-param name="remove-cover" select="$remove-cover"/>
-        <p:with-param name="ignore-files" select="$ignore-files"/>
+        <p:with-param name="remove-files-list" select="$remove-files-list"/>
       </p:xslt>
 
       <tr:store-debug pipeline-step="epub2epub/02-opf">
