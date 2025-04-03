@@ -23,6 +23,12 @@
     <p:pipe port="report" step="try-load-rootfile"/>
   </p:output>
   
+  <p:option name="ignore-files" select="''">
+    <p:documentation>
+      Whitespace-separated list of OPF manifest items that are not considered for the conversion.
+    </p:documentation>
+  </p:option>
+  
   <p:option name="debug" select="'no'"/>
   <p:option name="debug-dir-uri" select="'debug'"/>
   <p:option name="terminate-on-error" select="'no'"/>
@@ -51,12 +57,33 @@
                                       /ocf:container/ocf:rootfiles/ocf:rootfile/@full-path)"/>
       </p:load>
       
-      <p:delete match="/opf:package/opf:metadata/dc:*[not(normalize-space())]
-                      |/opf:package/opf:metadata/opf:meta[not(@name eq 'cover')]
-                      |/opf:package/opf:guide" 
-                name="remove-empty-metadata" cx:depends-on="load-opf"/>
-      
       <p:add-xml-base name="add-xml-base"/>
+      
+      <p:xslt name="remove-ignored-files" cx:depends-on="load-opf">
+        <p:input port="stylesheet">
+          <p:inline>
+            <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" 
+                            xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                            version="3.0">
+              
+              <xsl:param name="ignore-files" as="xs:string?"/>
+              <xsl:variable name="ignore-files-list" as="xs:string*" 
+                            select="for $file in tokenize($ignore-files, '\s') 
+                                    return replace($file, '^OEBPS/', '')"/>
+              
+              <xsl:mode on-no-match="shallow-copy"/>
+              
+              <xsl:template match="opf:metadata/dc:*[not(normalize-space())]
+                                  |opf:metadata/opf:meta[not(@name eq 'cover')]
+                                  |opf:guide
+                                  |opf:manifest/opf:item[@href = $ignore-files-list]
+                                  |opf:spine/opf:itemref[@idref = /opf:package/opf:manifest/opf:item[@href = $ignore-files-list]/@id]"/>
+              
+            </xsl:stylesheet>
+          </p:inline>
+        </p:input>
+        <p:with-param name="ignore-files" select="$ignore-files"/>
+      </p:xslt>
 
       <tr:store-debug pipeline-step="epub2epub/02-opf">
         <p:with-option name="active" select="$debug"/>

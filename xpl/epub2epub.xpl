@@ -79,6 +79,11 @@
       Whether the generated HTML toc should be hidden.
     </p:documentation>
   </p:option>
+  <p:option name="ignore-files" select="''">
+    <p:documentation>
+      Whitespace-separated list of OPF manifest items that are not considered for the conversion.
+    </p:documentation>
+  </p:option>
   <p:option name="remove-chars-regex" select="'([\p{Zs}]|%20)'">
     <p:documentation>
       Regular expression which matches characters to be deleted in filenames
@@ -152,12 +157,14 @@
     <e2e:unzip name="unzip">
       <p:with-option name="href" select="$epub-href"/>
       <p:with-option name="outdir" select="$tmpdir"/>
+      <p:with-option name="ignore-files" select="$ignore-files"/>
       <p:with-option name="debug" select="$debug"/>
       <p:with-option name="debug-dir-uri" select="$debug-dir-uri"/>
       <p:with-option name="terminate-on-error" select="$terminate-on-error"/>
     </e2e:unzip>
     
     <e2e:load-rootfile name="load-rootfile">
+      <p:with-option name="ignore-files" select="$ignore-files"/>
       <p:with-option name="debug" select="$debug"/>
       <p:with-option name="debug-dir-uri" select="$debug-dir-uri"/>
       <p:with-option name="terminate-on-error" select="$terminate-on-error"/>

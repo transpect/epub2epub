@@ -18,7 +18,7 @@
   <xsl:template match="/opf:epub">
     <xsl:variable name="cover-id" as="attribute(content)*" 
                   select="opf:package/opf:metadata/opf:meta[@name = 'cover']/@content"/>
-    <xsl:variable name="cover-file" as="element(opf:item)" 
+    <xsl:variable name="cover-file" as="element(opf:item)?" 
                   select="opf:package/opf:manifest/opf:item[@id = $cover-id][1]"/>
     <epub-config format="{$epub-version}" 
                  layout="reflowable" 
@@ -29,8 +29,10 @@
                  font-subset="false"
                  consider-headings-in-tables="false">
       
-      <cover svg="true" svg-scale-hack="true" 
-             href="{replace($cover-file/@href, $remove-chars-regex, '')}"/>
+      <xsl:if test="$cover-file">
+        <cover svg="true" svg-scale-hack="true" 
+               href="{replace($cover-file/@href, $remove-chars-regex, '')}"/>  
+      </xsl:if>
       
       <types>
         <type name="toc" heading="Inhaltsverzeichnis" hidden="true" fallback-id-for-landmark="rendered_toc"/> 
