@@ -97,9 +97,19 @@
           </p:input>
         </p:insert>
         
+        <tr:store-debug pipeline-step="epub2epub/031-div">
+          <p:with-option name="active" select="$debug"/>
+          <p:with-option name="base-uri" select="$debug-dir-uri"/>
+        </tr:store-debug>
+        
         <p:add-attribute match="/html:html/html:body/html:div[@class eq 'epub-html-split']" attribute-name="id">
           <p:with-option name="attribute-value" select="$idref"/>
         </p:add-attribute>
+        
+        <tr:store-debug pipeline-step="epub2epub/032-div">
+          <p:with-option name="active" select="$debug"/>
+          <p:with-option name="base-uri" select="$debug-dir-uri"/>
+        </tr:store-debug>
         
         <p:add-attribute match="/html:html/html:body/*" attribute-name="xml:base">
           <p:with-option name="attribute-value" select="base-uri()"/>
@@ -114,6 +124,11 @@
           <p:pipe port="result" step="wrap-html"/>
         </p:input>
       </p:insert>
+      
+      <tr:store-debug pipeline-step="epub2epub/033-div">
+        <p:with-option name="active" select="$debug"/>
+        <p:with-option name="base-uri" select="$debug-dir-uri"/>
+      </tr:store-debug>
       
       <p:delete match="/opf:epub/html:html[1]/html:head/html:link" name="temporarily-delete-css-ref"/>
       
@@ -139,8 +154,8 @@
         <p:when test="$remove-cover eq 'yes'">
           
           <p:delete match="/opf:epub/tr:cover
-                          |/opf:epub/opf:package/opf:manifest/opf:item[@id eq /opf:epub/tr:cover/html:html/html:body/html:div/@id]
-                          |/opf:epub/opf:package/opf:spine/opf:itemref[@idref eq /opf:epub/tr:cover/html:html/html:body/html:div/@id]"/>
+                          |/opf:epub/opf:package/opf:manifest/opf:item[@id    = /opf:epub/tr:cover/html:html/html:body/html:div/@id]
+                          |/opf:epub/opf:package/opf:spine/opf:itemref[@idref = /opf:epub/tr:cover/html:html/html:body/html:div/@id]"/>
           
         </p:when>
         <p:otherwise>

@@ -46,6 +46,11 @@
     <xsl:attribute name="href" select="concat('#', $manifest-item/@id, '_', substring-after(., '#'))"/>
   </xsl:template>
   
+  <xsl:template match="a/@href[not(contains(., '#'))][matches(., 'x?html', 'i')]">
+    <xsl:variable name="manifest-item" select="key('item-from-filename', .)" as="element(opf:item)?"/>
+    <xsl:attribute name="href" select="concat('#', $manifest-item/@id)"/>
+  </xsl:template>
+  
   <xsl:template match="/opf:epub/html/body//*[not(@class eq 'epub-html-split')]/@id[not(starts-with(., 'page_'))]">
     <xsl:variable name="manifest-item" select="key('item-from-filename', replace(base-uri(), '^(.+/)(.+)$', '$2'))" as="element(opf:item)?"/>
     <xsl:attribute name="id" select="concat($manifest-item/@id, '_', .)"/>
