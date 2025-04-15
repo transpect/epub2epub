@@ -80,6 +80,7 @@
                                   |opf:guide
                                   |opf:manifest/opf:item[@href  = $remove-files-list-list]
                                   |opf:manifest/opf:item[@id    = $remove-files-list-list]
+                                  |opf:manifest/opf:item[@media-type = 'application/adobe-page-template+xml']
                                   |opf:spine/opf:itemref[@idref = /opf:package/opf:manifest/opf:item[@href = $remove-files-list-list]/@id]
                                   |opf:manifest/opf:item[@id    = ($cover-id, $cover-html-id)][$remove-cover = 'yes']
                                   |opf:spine/opf:itemref[@idref = ($cover-id, $cover-html-id)][$remove-cover = 'yes']">
