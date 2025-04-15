@@ -84,10 +84,10 @@
   
   <xsl:template match="ncx:pageList" mode="toc"/>
   
-  <xsl:template match="html:*[@id][not(@class eq 'epub-html-split')]">  
+  <xsl:template match="html:*[@id][not(@class eq 'epub-html-split')][starts-with(@id, '#')]">  
     <xsl:variable name="id" select="@id" as="attribute(id)"/>
     <xsl:variable name="matching-ncx-fragment-entries" as="element(ncx:navPoint)" 
-                  select="$ncx-fragment-identifiers[replace(ncx:content/@src, '.*?#', '') = $id]"/>
+                  select="$ncx-fragment-identifiers[replace(ncx:content/@src, '^.*?#', '') = $id]"/>
     <xsl:copy>
       <xsl:attribute name="id" select="if($matching-ncx-fragment-entries) 
                                        then concat(preceding::html:div[@class eq 'epub-html-split'][1]/@id, @id)
