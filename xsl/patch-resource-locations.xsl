@@ -36,6 +36,28 @@
   <xsl:variable name="fileref-att-names" as="xs:string*" 
                 select="'src', 'data', 'poster', 'href', 'altimg'"/>
   
+  <xsl:template match="html:html//*[@*[local-name() = $fileref-att-names][not(starts-with(., '#'))]]">
+    <xsl:param name="resources" as="element(c:file)*" tunnel="yes"/>
+    <xsl:variable name="fileref-att" select="@*[local-name() = $fileref-att-names]" as="attribute()"/>
+    <xsl:variable name="fileref" select="replace(@*[local-name() = $fileref-att-names], '\.\./', '')" as="xs:string"/>
+    <xsl:choose>
+      <xsl:when test="$resources[matches(@opf-name, $fileref)]">
+        <xsl:copy>
+          <xsl:apply-templates select="@*, node()" mode="#current"/>
+        </xsl:copy>  
+      </xsl:when>
+      <xsl:when test="normalize-space(.)">
+        <xsl:message select="'[WARNING] resource', $fileref, 'was deleted, removing HTML attribute:', $fileref-att"/>
+        <xsl:copy>
+          <xsl:apply-templates select="@* except $fileref-att, node()" mode="#current"/>
+        </xsl:copy>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:message select="'[WARNING] resource', $fileref, 'was deleted, removing HTML element:', local-name(), ."/>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+  
   <xsl:template match="html:html//*/@*[local-name() = $fileref-att-names]
                                       [not(starts-with(., '#'))]
                                       [not(starts-with(., 'http'))]
