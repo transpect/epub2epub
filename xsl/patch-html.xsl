@@ -189,6 +189,8 @@
                       |iframe/@marginwidth    
                       |iframe/@scrolling
                       |iframe/@frameborder
+                      |img/@height[not(matches(., '^\d+$'))]
+                      |img/@width[not(matches(., '^\d+$'))]
                       |link/@charset
                       |link/@rev
                       |meta[@http-equiv]
