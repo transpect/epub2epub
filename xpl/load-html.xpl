@@ -11,8 +11,15 @@
   name="e2e-load-html"
   type="e2e:load-html">
   
-  <p:input port="source">
+  <p:input port="source" primary="true">
     <p:documentation>Expects the OPF document</p:documentation>
+  </p:input>
+
+  <p:input port="stylesheet" primary="false">
+    <p:documentation>
+      Custom XSLT that is applied on the combined OPF/HTML XML document.
+    </p:documentation>
+    <p:document href="../xsl/custom-xslt-placeholder.xsl"/>
   </p:input>
 
   <p:output port="result" primary="true">
@@ -38,7 +45,6 @@
   <p:option name="remove-cover" select="'no'"/>
   <p:option name="remove-chars-regex" select="'\s'"/>
   <p:option name="html-lang" select="'en'"/>
-  <p:option name="xslt-href" select="'../xsl/custom-xslt-placeholder.xsl'"/>
   <p:option name="debug" select="'no'"/>
   <p:option name="debug-dir-uri" select="'debug'"/>
   <p:option name="terminate-on-error" select="'no'"/>
@@ -181,16 +187,12 @@
       
       <p:sink/>
       
-      <p:load name="load-custom-xslt">
-        <p:with-option name="href" select="$xslt-href"/>
-      </p:load>
-      
       <p:xslt name="apply-custom-xslt">
         <p:input port="source">
           <p:pipe port="result" step="copy-xml-base"/>
         </p:input>
         <p:input port="stylesheet">
-          <p:pipe port="result" step="load-custom-xslt"/>
+          <p:pipe port="stylesheet" step="e2e-load-html"/>
         </p:input>
         <p:input port="parameters">
           <p:empty/>

@@ -18,6 +18,13 @@
     module to generate a new EPUB.
   </p:documentation>
   
+  <p:input port="stylesheet" primary="false">
+    <p:documentation>
+      Custom XSLT that is applied on the combined OPF/HTML XML document.
+    </p:documentation>
+    <p:document href="../xsl/custom-xslt-placeholder.xsl"/>
+  </p:input>
+  
   <p:output port="result" primary="true">
     <p:documentation>The EPUB paths document</p:documentation>
     <p:pipe port="result" step="main"/>
@@ -46,12 +53,12 @@
       Where the output will be stored
     </p:documentation>
   </p:option>
-  <p:option name="xslt-href" select="'../xsl/custom-xslt-placeholder.xsl'">
+  <!--<p:option name="xslt-href" select="'../xsl/custom-xslt-placeholder.xsl'">
     <p:documentation>
       Path to a custom XSLT that is applied 
       on the combined OPF/HTML XML document.
     </p:documentation>
-  </p:option>
+  </p:option>-->
   <p:option name="create-epub" select="'yes'">
     <p:documentation>
       Whether to create an EPUB with transpect epubtools module. When set to 'no', 
@@ -134,10 +141,6 @@
     <p:with-option name="filename" select="$href"/>
   </tr:file-uri>
   
-  <tr:file-uri name="normalize-xslt-path">
-    <p:with-option name="filename" select="$xslt-href"/>
-  </tr:file-uri>
-  
   <tr:file-uri name="normalize-outdir-path">
     <p:with-option name="filename" select="$outdir"/>
   </tr:file-uri>
@@ -177,10 +180,10 @@
     </e2e:load-rootfile>
     
     <e2e:load-html name="load-html">
+      <p:input port="stylesheet">
+        <p:pipe port="stylesheet" step="epub2epub"/>
+      </p:input>
       <p:with-option name="href" select="$epub-href"/>
-      <p:with-option name="xslt-href" select="/c:result/@local-href">
-        <p:pipe port="result" step="normalize-xslt-path"/>
-      </p:with-option>
       <p:with-option name="remove-cover" select="$remove-cover"/>
       <p:with-option name="remove-chars-regex" select="$remove-chars-regex"/>
       <p:with-option name="html-lang" select="$html-lang"/>
