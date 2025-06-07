@@ -26,8 +26,6 @@
   <xsl:variable name="page-list-ids" as="xs:string*" 
                 select="/opf:epub/html//nav[@epub:type = 'page-list']/generate-id()"/>
   
-  <xsl:key name="item-from-filename" match="$manifest-items" use="@href"/>
-  
   <xsl:template match="html[not(@lang)]">
     <xsl:copy>
       <xsl:attribute name="lang" select="(@xml:lang, lower-case(/opf:epub/opf:package/opf:metadata/dc:language), $html-lang)[1]"/>
@@ -42,17 +40,18 @@
   <xsl:template match="/opf:epub/html/body/*/@xml:base"/>
   
   <xsl:template match="a/@href[contains(., '#')]">
-    <xsl:variable name="manifest-item" select="key('item-from-filename', substring-before(., '#'))" as="element(opf:item)?"/>
+    <xsl:variable name="manifest-item" select="opf:item-from-filename(substring-before(., '#'))" as="element(opf:item)?"/>
     <xsl:attribute name="href" select="concat('#', $manifest-item/@id, '_', substring-after(., '#'))"/>
   </xsl:template>
   
   <xsl:template match="a/@href[not(contains(., '#'))][matches(., 'x?html', 'i')]">
-    <xsl:variable name="manifest-item" select="key('item-from-filename', .)" as="element(opf:item)?"/>
+    <xsl:variable name="manifest-item" select="opf:item-from-filename(.)" as="element(opf:item)"/>
     <xsl:attribute name="href" select="concat('#', $manifest-item/@id)"/>
   </xsl:template>
   
   <xsl:template match="/opf:epub/html/body//*[not(@class eq 'epub-html-split')]/@id[not(starts-with(., 'page_'))]">
-    <xsl:variable name="manifest-item" select="key('item-from-filename', replace(base-uri(), '^(.+/)(.+)$', '$2'))" as="element(opf:item)?"/>
+    <xsl:variable name="manifest-item" as="element(opf:item)?"
+                  select="opf:item-from-filename(replace(base-uri(), '^(.+/)(.+)$', '$2'))"/>
     <xsl:attribute name="id" select="concat($manifest-item/@id, '_', .)"/>
   </xsl:template>
   
@@ -223,5 +222,10 @@
       <xsl:copy-of select="."/>
     </xsl:if>
   </xsl:template>
+  
+  <xsl:function name="opf:item-from-filename" as="element(opf:item)">
+    <xsl:param name="filename" as="xs:string"/>
+    <xsl:sequence select="$manifest-items[matches(@href, replace($filename, '^(.+/)?(.+)$', '$2'))]"/>
+  </xsl:function>
   
 </xsl:stylesheet>
