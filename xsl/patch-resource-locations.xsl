@@ -20,7 +20,8 @@
     <xsl:variable name="resources" as="element(c:file)*">
       <xsl:for-each select="opf:package/opf:manifest/opf:item[not(@media-type = ('application/xhtml+xml', 
                                                                                  'application/x-dtbncx+xml'))]">
-        <c:file opf-name="{@href}" name="{concat($opf-uri, @href)}" target="{concat($outdir, '/', replace(@href, $remove-chars-regex, ''))}"/>
+        <c:file opf-name="{@href}" name="{concat($opf-uri, @href)}" 
+                target="{concat($outdir, '/', replace(@href, $remove-chars-regex, ''))}"/>
       </xsl:for-each>
     </xsl:variable>
     <xsl:copy>
@@ -36,7 +37,11 @@
   <xsl:variable name="fileref-att-names" as="xs:string*" 
                 select="'src', 'data', 'poster', 'href', 'altimg'"/>
   
-  <xsl:template match="html:html//*[@*[local-name() = $fileref-att-names][not(starts-with(., '#'))]]">
+  <xsl:variable name="protocol-exclusion-regex" as="xs:string" 
+                select="'^(#|https?:|www\.|mailto:)'"/>
+  
+  <xsl:template match="html:html//*[@*[local-name() = $fileref-att-names]
+                                      [not(matches(., $protocol-exclusion-regex))]]">
     <xsl:param name="resources" as="element(c:file)*" tunnel="yes"/>
     <xsl:variable name="fileref-att" select="@*[local-name() = $fileref-att-names]" as="attribute()"/>
     <xsl:variable name="fileref" select="replace(@*[local-name() = $fileref-att-names], '\.\./', '')" as="xs:string"/>
@@ -59,10 +64,7 @@
   </xsl:template>
   
   <xsl:template match="html:html//*/@*[local-name() = $fileref-att-names]
-                                      [not(starts-with(., '#'))]
-                                      [not(starts-with(., 'http'))]
-                                      [not(starts-with(., 'www.'))]
-                                      [not(starts-with(., 'mailto:'))]
+                                      [not(matches(., $protocol-exclusion-regex))]
                                       [not(matches(., '\.x?html$', 'i'))]">
     <xsl:param name="resources" as="element(c:file)*" tunnel="yes"/>
     <xsl:variable name="fileref-regex" select="concat('^', replace(., '\.\./', ''), '$')" as="xs:string"/>
