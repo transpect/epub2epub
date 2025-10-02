@@ -39,8 +39,8 @@
   
   <xsl:template match="/opf:epub/html/body/*/@xml:base"/>
   
-  <xsl:template match="a/@href[contains(., '#')]">
-    <xsl:variable name="manifest-item" select="opf:item-from-filename(substring-before(., '#'))" as="element(opf:item)?"/>
+  <xsl:template match="a/@href[contains(., '#')][not(starts-with(., '#'))]">
+    <xsl:variable name="manifest-item" select="opf:item-from-filename(substring-before(., '#'))" as="element(opf:item)"/>
     <xsl:attribute name="href" select="concat('#', $manifest-item/@id, '_', substring-after(., '#'))"/>
   </xsl:template>
   
