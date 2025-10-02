@@ -13,7 +13,7 @@
   <xsl:param name="html-lang" as="xs:string?"/>
   
   <xsl:mode on-no-match="shallow-copy"/>
-  
+    
   <xsl:variable name="manifest-items" as="element(opf:item)*" 
                 select="/opf:epub/opf:package/opf:manifest/opf:item"/>
   
@@ -39,19 +39,32 @@
   
   <xsl:template match="/opf:epub/html/body/*/@xml:base"/>
   
+  <!-- always add opf item as suffix to ids and internal links -->
+  
   <xsl:template match="a/@href[contains(., '#')][not(starts-with(., '#'))]">
-    <xsl:variable name="manifest-item" select="opf:item-from-filename(substring-before(., '#'))" as="element(opf:item)"/>
+    <xsl:variable name="manifest-item" as="element(opf:item)"
+                  select="opf:item-from-filename(substring-before(., '#'))"/>
     <xsl:attribute name="href" select="concat('#', $manifest-item/@id, '_', substring-after(., '#'))"/>
   </xsl:template>
   
-  <xsl:template match="a/@href[not(contains(., '#'))][matches(., 'x?html', 'i')]">
+  <xsl:template match="a/@href[contains(., '#')][starts-with(., '#')]">
+    <xsl:variable name="manifest-item" as="element(opf:item)" 
+                  select="opf:item-from-filename(
+                            tokenize(ancestor::*[@xml:base][1]/@xml:base, '/')[last()]
+                          )"/>
+    <xsl:attribute name="href" select="concat('#', $manifest-item/@id, '_', substring-after(., '#'))"/>
+  </xsl:template>
+  
+  <xsl:template match="a/@href[not(contains(., '#'))][matches(., '\.x?html$', 'i')]">
     <xsl:variable name="manifest-item" select="opf:item-from-filename(.)" as="element(opf:item)"/>
     <xsl:attribute name="href" select="concat('#', $manifest-item/@id)"/>
   </xsl:template>
   
-  <xsl:template match="/opf:epub/html/body//*[not(@class eq 'epub-html-split')]/@id[not(starts-with(., 'page_'))]">
-    <xsl:variable name="manifest-item" as="element(opf:item)?"
-                  select="opf:item-from-filename(replace(base-uri(), '^(.+/)(.+)$', '$2'))"/>
+  <xsl:template match="/opf:epub/html/body//*[not(@class eq 'epub-html-split')]/@id">
+    <xsl:variable name="manifest-item" as="element(opf:item)"
+                  select="opf:item-from-filename(
+                            tokenize(ancestor::*[@xml:base][1]/@xml:base, '/')[last()]
+                          )"/>
     <xsl:attribute name="id" select="concat($manifest-item/@id, '_', .)"/>
   </xsl:template>
   
@@ -66,7 +79,11 @@
     <xsl:attribute name="{name()}" select="replace(., $remove-chars-regex, '')"/>
   </xsl:template>
   
-  <xsl:template match="a[not(normalize-space()) or matches(., '^\p{Zs}+$')][contains(@href, '#')]">
+  <!-- non-visible internal links -->
+  
+  <xsl:template match="a[not(normalize-space()) or matches(., '^\p{Zs}+$')]
+                        [contains(@href, '#')]
+                        [not(*)]">
     <span>
       <xsl:apply-templates select="@* except @href, node()"/>
     </span>
