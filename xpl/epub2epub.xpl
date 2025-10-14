@@ -35,6 +35,11 @@
     <p:pipe port="html" step="main"/>
   </p:output>
   
+  <p:output port="opf" primary="false">
+    <p:documentation>The OPF document</p:documentation>
+    <p:pipe port="opf" step="main"/>
+  </p:output>
+  
   <p:output port="report" primary="false" sequence="true">
     <p:pipe port="report" step="main"/>
   </p:output>
@@ -155,6 +160,9 @@
     </p:output>
     <p:output port="html">
       <p:pipe port="html" step="load-html"/>
+    </p:output>
+    <p:output port="opf">
+      <p:pipe port="result" step="load-rootfile"/>
     </p:output>
     <p:variable name="outdir-href" select="/c:result/@local-href"/>
     <p:variable name="epub-href" select="/c:result/@local-href">
