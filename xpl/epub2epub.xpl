@@ -160,6 +160,11 @@
     <p:output port="result" primary="true"/>
     <p:output port="report" primary="false" sequence="true">
       <p:pipe port="report" step="unzip"/>
+      <p:pipe port="report" step="load-rootfile"/>
+      <p:pipe port="report" step="load-html"/>
+      <p:pipe port="report" step="include-alt-xml"/>
+      <p:pipe port="report" step="copy-resources"/>
+      <p:pipe port="report" step="choose-create-epub"/>
     </p:output>
     <p:output port="input-for-schematron" primary="false" sequence="true">
       <p:pipe port="input-for-schematron" step="choose-create-epub"/>
@@ -207,8 +212,8 @@
     </e2e:load-html>
     
     <e2e:include-alt-xml name="include-alt-xml">
-      <p:input port="links">
-        <p:pipe port="links" step="epub2epub"/>
+      <p:input port="alt-xml">
+        <p:pipe port="alt-xml" step="epub2epub"/>
       </p:input>
       <p:with-option name="debug" select="$debug"/>
       <p:with-option name="debug-dir-uri" select="$debug-dir-uri"/>
@@ -252,7 +257,7 @@
         <p:output port="input-for-schematron" primary="false" sequence="true">
           <p:pipe port="input-for-schematron" step="epub-convert"/>
         </p:output>
-        <p:output port="report">
+        <p:output port="report" sequence="true">
           <p:pipe port="report" step="epub-convert"/>
         </p:output>
         <epub:convert name="epub-convert">
@@ -272,7 +277,7 @@
         </epub:convert>
       </p:when>
       <p:otherwise>
-        <p:output port="result" primary="true"/>
+        <p:output port="result" primary="true" sequence="true"/>
         <p:output port="input-for-schematron" primary="false" sequence="true">
           <p:empty/>
         </p:output>
