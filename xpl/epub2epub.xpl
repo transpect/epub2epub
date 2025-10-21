@@ -25,6 +25,17 @@
     <p:document href="../xsl/custom-xslt-placeholder.xsl"/>
   </p:input>
   
+  <p:input port="alt-xml" primary="false" sequence="true">
+    <p:documentation>
+      Optional input if alternative texts should be 
+      applied to HTML img elements. The schema for 
+      this input is stored in ../schema/links.rng.
+    </p:documentation>
+    <p:inline>
+      <links/>
+    </p:inline>
+  </p:input>
+  
   <p:output port="result" primary="true">
     <p:documentation>The EPUB paths document</p:documentation>
     <p:pipe port="result" step="main"/>
@@ -58,12 +69,6 @@
       Where the output will be stored
     </p:documentation>
   </p:option>
-  <!--<p:option name="xslt-href" select="'../xsl/custom-xslt-placeholder.xsl'">
-    <p:documentation>
-      Path to a custom XSLT that is applied 
-      on the combined OPF/HTML XML document.
-    </p:documentation>
-  </p:option>-->
   <p:option name="create-epub" select="'yes'">
     <p:documentation>
       Whether to create an EPUB with transpect epubtools module. When set to 'no', 
@@ -137,6 +142,7 @@
   <p:import href="unzip.xpl"/>
   <p:import href="load-rootfile.xpl"/>
   <p:import href="load-html.xpl"/>
+  <p:import href="include-alt-xml.xpl"/>
   <p:import href="patch-css.xpl"/>
   <p:import href="copy-resources.xpl"/>
   <p:import href="create-config.xpl"/>
@@ -200,6 +206,15 @@
       <p:with-option name="terminate-on-error" select="$terminate-on-error"/>
     </e2e:load-html>
     
+    <e2e:include-alt-xml name="include-alt-xml">
+      <p:input port="links">
+        <p:pipe port="links" step="epub2epub"/>
+      </p:input>
+      <p:with-option name="debug" select="$debug"/>
+      <p:with-option name="debug-dir-uri" select="$debug-dir-uri"/>
+      <p:with-option name="terminate-on-error" select="$terminate-on-error"/>
+    </e2e:include-alt-xml>
+    
     <e2e:patch-css name="patch-css" cx:depends-on="load-html">
       <p:with-option name="href" select="$epub-href"/>
       <p:with-option name="debug" select="$debug"/>
@@ -237,6 +252,9 @@
         <p:output port="input-for-schematron" primary="false" sequence="true">
           <p:pipe port="input-for-schematron" step="epub-convert"/>
         </p:output>
+        <p:output port="report">
+          <p:pipe port="report" step="epub-convert"/>
+        </p:output>
         <epub:convert name="epub-convert">
           <p:input port="source" select="/opf:epub/html:html">
             <p:pipe port="result" step="create-config"/>
@@ -256,6 +274,9 @@
       <p:otherwise>
         <p:output port="result" primary="true"/>
         <p:output port="input-for-schematron" primary="false" sequence="true">
+          <p:empty/>
+        </p:output>
+        <p:output port="report">
           <p:empty/>
         </p:output>
         <p:identity/>

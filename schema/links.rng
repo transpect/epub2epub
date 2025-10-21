@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar 
+  xmlns="http://relaxng.org/ns/structure/1.0"
+  xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
+  datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+  
+  <a:documentation>
+    Schema for links xml that represents file names 
+    and their corresponding alternative texts.
+  </a:documentation>
+  
+  <start>
+    <ref name="links.element"/>
+  </start>
+  
+  <define name="links.element">
+    <element name="links">
+      <ref name="links.content"/>
+    </element>
+  </define>
+  
+  <define name="links.content">
+    <zeroOrMore>
+      <ref name="link.element"/>
+    </zeroOrMore>
+  </define>
+  
+  <define name="link.element">
+    <element name="link">
+      <ref name="link.content"/>
+    </element>
+  </define>
+  
+  <define name="link.content">
+    <attribute name="name">
+      <text/>
+    </attribute>
+    <attribute name="alt">
+      <text/>
+    </attribute>
+    <optional>
+      <attribute name="artifact">
+        <data type="boolean"/>
+      </attribute>
+    </optional>
+  </define>
+  
+</grammar>
