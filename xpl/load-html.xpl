@@ -129,7 +129,8 @@
         </p:input>
       </p:insert>
 
-      <p:delete match="/opf:epub/html:html[position() ne 1]" name="delete-rest"/>
+      <p:delete match="/opf:epub/html:html[position() ne 1]
+                      |/opf:epub/html:html[1]/html:body/@epub:type" name="delete-rest"/>
       
       <p:insert match="/opf:epub" position="first-child" name="insert-opf">
         <p:input port="insertion">
