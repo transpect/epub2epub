@@ -132,6 +132,12 @@
     </span>
   </xsl:template>
   
+  <xsl:template match="p[p]">
+    <div>
+      <xsl:apply-templates select="@*, node()"/>
+    </div>
+  </xsl:template>
+  
   <xsl:template match="table[@border and not(@border = ('', '0'))]">
     <div class="html-deprecated-border-att" style="{concat('border: ', @border, 'px solid #000;')}">
       <xsl:copy>
