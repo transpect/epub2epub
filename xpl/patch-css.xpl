@@ -38,7 +38,6 @@
       <p:for-each name="spine-iteration">
         <p:iteration-source select="/opf:epub/opf:package/opf:manifest/opf:item[@media-type eq 'text/css'][ends-with(@href, '.css')]"/>
         <p:variable name="css-uri" select="resolve-uri(opf:item/@href, $opf-uri)"/>
-        <p:variable name="css-out-uri" select="replace($css-uri, '\.css$', '-new.css', 'i')"/>
         
         <cx:message>
           <p:with-option name="message" select="'[info] patch CSS: ', $css-uri"/>
@@ -58,11 +57,11 @@
         </tr:store-debug>
         
         <cx:message>
-          <p:with-option name="message" select="'[info] store CSS: ', $css-out-uri"/>
+          <p:with-option name="message" select="'[info] store CSS: ', $css-uri"/>
         </cx:message>
         
         <p:store method="text" media-type="text/plain" encoding="utf8" cx:depends-on="patch-css">
-          <p:with-option name="href" select="$css-out-uri"/>
+          <p:with-option name="href" select="$css-uri"/>
         </p:store>
         
       </p:for-each>
@@ -75,24 +74,22 @@
       
       <p:viewport match="/opf:epub/opf:package/opf:manifest/opf:item[@media-type eq 'text/css'][ends-with(@href, '.css')]">
         <p:variable name="css-href" select="opf:item/@href"/>
-        <p:variable name="css-out-href" select="replace($css-href, '\.css$', '-new.css', 'i')"/>
         
         <p:add-attribute match="opf:item" attribute-name="href">
-          <p:with-option name="attribute-value" select="$css-out-href"/>
+          <p:with-option name="attribute-value" select="$css-href"/>
         </p:add-attribute>
         
       </p:viewport>
       
       <p:viewport match="/opf:epub/html:html/html:head/html:link[@rel eq 'stylesheet']">
         <p:variable name="css-href" select="html:link/@href"/>
-        <p:variable name="css-out-href" select="replace($css-href, '\.css$', '-new.css', 'i')"/>
         
         <cx:message>
-          <p:with-option name="message" select="'[info] rename CSS: references ', $css-out-href"/>
+          <p:with-option name="message" select="'[info] rename CSS: references ', $css-href"/>
         </cx:message>
         
         <p:add-attribute match="html:link" attribute-name="href">
-          <p:with-option name="attribute-value" select="$css-out-href"/>
+          <p:with-option name="attribute-value" select="$css-href"/>
         </p:add-attribute>
         
       </p:viewport>
