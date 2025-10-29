@@ -65,6 +65,12 @@
         <p:empty/>
       </p:output>
       <p:variable name="opf-uri" select="/opf:package/@xml:base"/>
+      <p:variable name="cover-id" select="/opf:package/opf:metadata/*:meta[@name eq 'cover']/@content"/>
+      <p:variable name="cover-name" 
+                  select="tokenize(
+                            /opf:package/opf:manifest/opf:item[@id eq $cover-id]/@href,
+                            '/'
+                          )[last()]"/>
 
       <p:for-each name="spine-iteration">
         <p:iteration-source select="/opf:package/opf:spine/opf:itemref"/>
@@ -81,35 +87,40 @@
           <p:with-option name="href" select="resolve-uri($path, $opf-uri)"/>
         </p:load>
         
-        <p:choose name="choose-to-wrap-cover">
-          <p:when test="    $remove-cover eq 'yes' 
-                        and //*[local-name() = ('figure', 'img')][@epub:type eq 'cover' or @role eq 'doc-cover']">
-            
-            <p:wrap match="/html:html" wrapper="tr:cover"/>
-                        
-          </p:when>
-          <p:otherwise>
-            
-            <p:identity/>
-            
-          </p:otherwise>
-        </p:choose>
+        <p:group>
+          <p:variable name="is-cover-html" select="(//*:img/tokenize(@src, '/')[last()],
+                                                    //*:image/tokenize(@*:href, '/')[last()]) = $cover-name"/>
+          
+          <p:choose name="choose-to-wrap-cover">
+            <p:when test="$is-cover-html = 'true'">
+              
+              <p:wrap match="/html:html" wrapper="tr:cover"/>
+                          
+            </p:when>
+            <p:otherwise>
+              
+              <p:identity/>
+              
+            </p:otherwise>
+          </p:choose>
+          
+          <p:insert match="/html:html/html:body" position="first-child" name="insert-split-point">
+            <p:input port="insertion">
+              <p:inline>
+                <div class="epub-html-split" xmlns="http://www.w3.org/1999/xhtml"/>
+              </p:inline>
+            </p:input>
+          </p:insert>
+          
+          <p:add-attribute match="/html:html/html:body/html:div[@class eq 'epub-html-split']" attribute-name="id">
+            <p:with-option name="attribute-value" select="$idref"/>
+          </p:add-attribute>
+          
+          <p:add-attribute match="/html:html/html:body/*" attribute-name="xml:base">
+            <p:with-option name="attribute-value" select="base-uri()"/>
+          </p:add-attribute>
         
-        <p:insert match="/html:html/html:body" position="first-child" name="insert-split-point">
-          <p:input port="insertion">
-            <p:inline>
-              <div class="epub-html-split" xmlns="http://www.w3.org/1999/xhtml"/>
-            </p:inline>
-          </p:input>
-        </p:insert>
-        
-        <p:add-attribute match="/html:html/html:body/html:div[@class eq 'epub-html-split']" attribute-name="id">
-          <p:with-option name="attribute-value" select="$idref"/>
-        </p:add-attribute>
-        
-        <p:add-attribute match="/html:html/html:body/*" attribute-name="xml:base">
-          <p:with-option name="attribute-value" select="base-uri()"/>
-        </p:add-attribute>
+        </p:group>
         
       </p:for-each>
       
@@ -152,12 +163,10 @@
         </p:when>
         <p:otherwise>
           
-          <p:identity/>
+          <p:delete match="/opf:epub/tr:cover"/>
           
         </p:otherwise>
       </p:choose>
-      
-      <p:delete match="/opf:epub/tr:cover/html:html/@tr:id"/>
       
       <cx:message>
         <p:with-option name="message" select="'[info] patch deprecated html elements and attributes'"/>
