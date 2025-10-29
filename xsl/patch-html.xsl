@@ -41,7 +41,7 @@
   
   <!-- always add opf item as suffix to ids and internal links -->
   
-  <xsl:template match="a/@href[contains(., '#')][not(starts-with(., '#'))]">
+  <xsl:template match="a/@href[contains(., '#')][not(starts-with(., '#'))]">  
     <xsl:variable name="manifest-item" as="element(opf:item)"
                   select="opf:item-from-filename(substring-before(., '#'))"/>
     <xsl:attribute name="href" select="concat('#', $manifest-item/@id, '_', substring-after(., '#'))"/>
@@ -248,7 +248,14 @@
   
   <xsl:function name="opf:item-from-filename" as="element(opf:item)">
     <xsl:param name="filename" as="xs:string"/>
-    <xsl:sequence select="$manifest-items[matches(@href, replace($filename, '^(.+/)?(.+)$', '$2'))]"/>
+    <xsl:sequence select="$manifest-items[matches(
+                                            replace(@href, '^(.+/)?(.+)$', '$2'), 
+                                            concat(
+                                              '^', 
+                                              replace($filename, '^(.+/)?(.+)$', '$2'),
+                                              '$'
+                                            )
+                                          )]"/>
   </xsl:function>
   
 </xsl:stylesheet>
