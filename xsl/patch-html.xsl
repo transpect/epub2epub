@@ -41,13 +41,15 @@
   
   <!-- always add opf item as suffix to ids and internal links -->
   
-  <xsl:template match="a/@href[contains(., '#')][not(starts-with(., '#'))]">  
+  <xsl:template match="a/@href[contains(., '#')][not(starts-with(., '#'))]
+                              [not(matches(.,'^(https?|ftp|mailto):(//)?'))]">  
     <xsl:variable name="manifest-item" as="element(opf:item)"
                   select="opf:item-from-filename(substring-before(., '#'))"/>
     <xsl:attribute name="href" select="concat('#', $manifest-item/@id, '_', substring-after(., '#'))"/>
   </xsl:template>
   
-  <xsl:template match="a/@href[contains(., '#')][starts-with(., '#')]">
+  <xsl:template match="a/@href[contains(., '#')][starts-with(., '#')]
+                              [not(matches(.,'^(https?|ftp|mailto):(//)?'))]">
     <xsl:variable name="manifest-item" as="element(opf:item)" 
                   select="opf:item-from-filename(
                             tokenize(ancestor::*[@xml:base][1]/@xml:base, '/')[last()]
@@ -55,7 +57,9 @@
     <xsl:attribute name="href" select="concat('#', $manifest-item/@id, '_', substring-after(., '#'))"/>
   </xsl:template>
   
-  <xsl:template match="a/@href[not(contains(., '#'))][matches(., '\.x?html$', 'i')]">
+  <xsl:template match="a/@href[not(contains(., '#'))]
+                              [not(matches(.,'^(https?|ftp|mailto):(//)?'))]   
+                              [matches(., '\.x?html$', 'i')]">
     <xsl:variable name="manifest-item" select="opf:item-from-filename(.)" as="element(opf:item)"/>
     <xsl:attribute name="href" select="concat('#', $manifest-item/@id)"/>
   </xsl:template>
