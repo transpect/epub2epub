@@ -273,6 +273,8 @@
           <p:with-option name="debug" select="$debug"/>
           <p:with-option name="debug-dir-uri" select="$debug-dir-uri"/>
           <p:with-option name="status-dir-uri" select="$status-dir-uri"/>
+          <p:with-option name="create-a11y-meta" select="'true'"/>
+          <p:with-option name="drop-epub-types-without-matching-aria-role" select="'true'"/>
           <p:with-option name="terminate-on-error" select="$terminate-on-error"/>
         </epub:convert>
       </p:when>
