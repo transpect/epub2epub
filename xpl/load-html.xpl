@@ -132,16 +132,16 @@
         </p:input>
       </p:insert>
       
-      <p:delete match="/opf:epub/html:html[1]/html:head/html:link" name="temporarily-delete-css-ref"/>
-      
       <p:insert match="/opf:epub/html:html[1]/html:head" position="last-child" name="insert-html-css-refs">
-        <p:input port="insertion" select="/opf:epub/html:html/html:head/html:link[not(@href = preceding::html:link/@href)]">
+        <p:input port="insertion" 
+                 select="/opf:epub//html:link[@rel eq 'stylesheet']">
           <p:pipe port="result" step="wrap-html"/>
         </p:input>
       </p:insert>
-
+      
       <p:delete match="/opf:epub/html:html[position() ne 1]
-                      |/opf:epub/html:html[1]/html:body/@epub:type" name="delete-rest"/>
+                      |/opf:epub/html:html[1]/html:body/@epub:type
+                      |html:link[@href = preceding-sibling::html:link/@href]" name="delete-rest"/>
       
       <p:insert match="/opf:epub" position="first-child" name="insert-opf">
         <p:input port="insertion">
