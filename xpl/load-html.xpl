@@ -172,7 +172,7 @@
         <p:with-option name="message" select="'[info] patch deprecated html elements and attributes'"/>
       </cx:message>
       
-      <tr:store-debug pipeline-step="epub2epub/03-html-plus-opf">
+      <tr:store-debug pipeline-step="epub2epub/04-html-plus-opf">
         <p:with-option name="active" select="$debug"/>
         <p:with-option name="base-uri" select="$debug-dir-uri"/>
       </tr:store-debug>
@@ -190,7 +190,7 @@
         <p:with-option name="attribute-value" select="/opf:epub/@xml:base"/>
       </p:add-attribute>
       
-      <tr:store-debug pipeline-step="epub2epub/04-html-plus-opf-patched">
+      <tr:store-debug pipeline-step="epub2epub/05-html-plus-opf-patched">
         <p:with-option name="active" select="$debug"/>
         <p:with-option name="base-uri" select="$debug-dir-uri"/>
       </tr:store-debug>
@@ -209,14 +209,14 @@
         </p:input>
       </p:xslt>
       
-      <tr:store-debug pipeline-step="epub2epub/05-custom-xslt">
+      <tr:store-debug pipeline-step="epub2epub/06-custom-xslt">
         <p:with-option name="active" select="$debug"/>
         <p:with-option name="base-uri" select="$debug-dir-uri"/>
       </tr:store-debug>
       
       <p:filter select="/opf:epub/html:html" name="filter-html"/>
       
-      <tr:store-debug pipeline-step="epub2epub/06-html-only">
+      <tr:store-debug pipeline-step="epub2epub/07-html-only">
         <p:with-option name="active" select="$debug"/>
         <p:with-option name="base-uri" select="$debug-dir-uri"/>
       </tr:store-debug>
