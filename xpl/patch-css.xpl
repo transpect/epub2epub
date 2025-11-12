@@ -11,8 +11,19 @@
   name="e2e-patch-css"
   type="e2e:patch-css">
   
-  <p:input port="source">
+  <p:input port="source" primary="true">
     <p:documentation>Expects the OPF document</p:documentation>
+  </p:input>
+  
+  <p:input port="css" primary="false" sequence="true">
+    <p:documentation>
+      Custom CSS to be added to the end of all CSS files. Input is expected to look like this:
+      
+      &lt;c:body>
+      a.link { color:none }
+      &lt;/c:body>
+    </p:documentation>
+    <p:empty/>
   </p:input>
 
   <p:output port="result" primary="true">
@@ -43,7 +54,23 @@
           <p:with-option name="message" select="'[info] patch CSS: ', $css-uri"/>
         </cx:message>
         
+        <p:sink/>
+        
+        <tr:store-debug pipeline-step="css/css">
+          <p:input port="source">
+            <p:pipe port="css" step="e2e-patch-css"/>
+          </p:input>
+          <p:with-option name="active" select="$debug"/>
+          <p:with-option name="base-uri" select="$debug-dir-uri"/>
+        </tr:store-debug>
+        
+        <p:sink/>
+        
         <p:xslt template-name="main" name="patch-css">
+          <p:input port="source">
+            <p:pipe port="current" step="spine-iteration"/>
+            <p:pipe port="css" step="e2e-patch-css"/>
+          </p:input>
           <p:input port="stylesheet">
             <p:document href="../xsl/patch-css.xsl"/>
           </p:input>

@@ -25,6 +25,17 @@
     <p:document href="../xsl/custom-xslt-placeholder.xsl"/>
   </p:input>
   
+  <p:input port="css" primary="false" sequence="true">
+    <p:documentation>
+      Custom CSS to be added to the end of all CSS files. Input is expected to look like this:
+      
+      &lt;c:body>
+         a.link { color:none }
+      &lt;/c:body>
+    </p:documentation>
+    <p:empty/>
+  </p:input>
+  
   <p:input port="alt-xml" primary="false" sequence="true">
     <p:documentation>
       Optional input if alternative texts should be 
@@ -221,6 +232,9 @@
     </e2e:include-alt-xml>
     
     <e2e:patch-css name="patch-css" cx:depends-on="load-html">
+      <p:input port="css">
+        <p:pipe port="css" step="epub2epub"/>
+      </p:input>
       <p:with-option name="href" select="$epub-href"/>
       <p:with-option name="debug" select="$debug"/>
       <p:with-option name="debug-dir-uri" select="$debug-dir-uri"/>

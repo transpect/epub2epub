@@ -8,6 +8,9 @@
   
   <xsl:param name="href" as="xs:string"/>
   
+  <xsl:variable name="additional-css" as="document-node(element(c:data))?" 
+                select="collection()[2]"/>
+  
   <xsl:template name="main">
     <xsl:variable name="css" select="if(unparsed-text-available($href))
                                      then unparsed-text($href)
@@ -16,6 +19,7 @@
       <xsl:value-of select="tr:patch-css($css)"/>
       <!-- do not display list styles for generated nav toc -->
       <xsl:text>nav ol, ol.toc-level-1, ol.toc-level-2, ol.toc-level-3, ol.toc-level-4, ol.toc-level-5, ol.toc-level-6, ol.toc-level-7, ol.toc-level-8, ol.toc-level-9 { list-style:none }</xsl:text>
+      <xsl:sequence select="$additional-css/c:data/text()"/>
     </c:data>
   </xsl:template>
   
