@@ -195,7 +195,15 @@
   
   <xsl:template match="img/@longdesc">
     <img>
-      <xsl:apply-templates select="@*"/>
+      <xsl:choose>
+        <xsl:when test="@alt">
+          <xsl:attribute name="alt" select="concat(../@alt, ' ', .)"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:attribute name="alt" select="."/>
+        </xsl:otherwise>
+      </xsl:choose>
+      <xsl:apply-templates select="@* except @alt"/>
     </img>
   </xsl:template>
   
