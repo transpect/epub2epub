@@ -44,14 +44,14 @@
   <xsl:template match="/opf:epub/html/body//a/@href[contains(., '#')][not(starts-with(., '#'))]
                                                    [not(matches(.,'^(https?|ftp|mailto):(//)?'))]">  
     <xsl:variable name="manifest-item" as="element(opf:item)"
-                  select="opf:item-from-filename(substring-before(., '#'))"/>
+                  select="epub:item-from-filename(substring-before(., '#'))"/>
     <xsl:attribute name="href" select="concat('#', $manifest-item/@id, '_', substring-after(., '#'))"/>
   </xsl:template>
   
   <xsl:template match="/opf:epub/html/body//a/@href[contains(., '#')][starts-with(., '#')]
                                                    [not(matches(.,'^(https?|ftp|mailto):(//)?'))]">
     <xsl:variable name="manifest-item" as="element(opf:item)" 
-                  select="opf:item-from-filename(
+                  select="epub:item-from-filename(
                             tokenize(ancestor::*[@xml:base][1]/@xml:base, '/')[last()]
                           )"/>
     <xsl:attribute name="href" select="concat('#', $manifest-item/@id, '_', substring-after(., '#'))"/>
@@ -60,13 +60,13 @@
   <xsl:template match="/opf:epub/html/body//a/@href[not(contains(., '#'))]
                                                    [not(matches(.,'^(https?|ftp|mailto):(//)?'))]   
                                                    [matches(., '\.x?html$', 'i')]">
-    <xsl:variable name="manifest-item" select="opf:item-from-filename(.)" as="element(opf:item)"/>
+    <xsl:variable name="manifest-item" select="epub:item-from-filename(.)" as="element(opf:item)"/>
     <xsl:attribute name="href" select="concat('#', $manifest-item/@id)"/>
   </xsl:template>
   
   <xsl:template match="/opf:epub/html/body//*[not(@class eq 'epub-html-split')]/@id">
     <xsl:variable name="manifest-item" as="element(opf:item)"
-                  select="opf:item-from-filename(
+                  select="epub:item-from-filename(
                             tokenize(ancestor::*[@xml:base][1]/@xml:base, '/')[last()]
                           )"/>
     <xsl:attribute name="id" select="concat($manifest-item/@id, '_', .)"/>
@@ -173,7 +173,7 @@
   </xsl:template>
   
   <xsl:template match="font/@size">
-    <xsl:value-of select="concat('font-size: ', ., '; ')"/>
+    <xsl:value-of select="concat('font-size: ', epub:map-font-size(.), '; ')"/>
   </xsl:template>
   
   <xsl:template match="font/@color">
@@ -251,7 +251,21 @@
     </xsl:if>
   </xsl:template>
   
-  <xsl:function name="opf:item-from-filename" as="element(opf:item)">
+  <!-- The old <font size="…"> attribute used a 1–7 scale, 
+       which was based on the browser’s default font size (usually 16px) -->
+  
+  <xsl:function name="epub:map-font-size" as="xs:string">
+    <xsl:param name="value" as="xs:integer"/>
+    <xsl:sequence select="     if($value = 1) then '0.625em'
+                          else if($value = 2) then '0.8125em'
+                          else if($value = 4) then '1.125em'
+                          else if($value = 5) then '1.333em'
+                          else if($value = 6) then '2em'
+                          else if($value = 7) then '3em'
+                          else                     '1em'"/>
+  </xsl:function>
+  
+  <xsl:function name="epub:item-from-filename" as="element(opf:item)">
     <xsl:param name="filename" as="xs:string"/>
     <xsl:sequence select="$manifest-items[matches(
                                             replace(@href, '^(.+/)?(.+)$', '$2'), 
