@@ -7,6 +7,7 @@
   
   <xsl:param name="remove-cover" as="xs:string"/>
   <xsl:param name="remove-files-list" as="xs:string?"/>
+  
   <xsl:variable name="remove-files-list-list" as="xs:string*" 
                 select="for $file in tokenize($remove-files-list, '\s') 
                         return replace($file, '^OEBPS/', '')"/>
@@ -20,6 +21,8 @@
   
   <xsl:template match="opf:metadata/dc:*[not(normalize-space())]
                       |opf:metadata/opf:meta[not(@name = 'cover') or (@name = 'cover' and $remove-cover = 'yes')]
+                      |opf:metadata/opf:meta[some $name in @name     satisfies preceding-sibling::opf:meta[@name = $name]]
+                      |opf:metadata/opf:meta[some $prop in @property satisfies preceding-sibling::opf:meta[@name = $prop]]
                       |opf:guide
                       |opf:manifest/opf:item[@href  = $remove-files-list-list]
                       |opf:manifest/opf:item[@id    = $remove-files-list-list]
