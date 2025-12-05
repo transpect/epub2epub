@@ -23,9 +23,6 @@
   <xsl:variable name="landmark-ids" as="xs:string*" 
                 select="/opf:epub/html//nav[@epub:type = 'landmarks']/generate-id()"/>
   
-  <xsl:variable name="page-list-ids" as="xs:string*" 
-                select="/opf:epub/html//nav[@epub:type = 'page-list']/generate-id()"/>
-  
   <xsl:template match="html[not(@lang)]">
     <xsl:copy>
       <xsl:attribute name="lang" select="(@xml:lang, lower-case(/opf:epub/opf:package/opf:metadata/dc:language), $html-lang)[1]"/>
@@ -231,7 +228,7 @@
                       |meta[@http-equiv]
                       |nav[@epub:type = 'toc'][index-of($toc-ids, generate-id()) != 1]
                       |nav[@epub:type = 'landmarks'][index-of($landmark-ids, generate-id()) != 1]
-                      |nav[@epub:type = 'page-list'][index-of($page-list-ids, generate-id()) != 1]
+                      |nav[@epub:type = 'page-list']
                       |table/@rules
                       |@align
                       |@border[. = ('', '0')]
