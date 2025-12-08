@@ -249,7 +249,8 @@
   <xsl:variable name="toc-heading-regex" as="xs:string"
                 select="'^(Inhalt(sverzeichnis)?|(Table\sof\s)?Contents|Table\sdes\smatières|Tabla\sde\scontenido|(I|Í)ndice)$'"/>
   
-  <xsl:template match="div[    exists(.//p[a[@href]])
+  <xsl:template match="div[    exists(.//p[a[@href]]) 
+                           and exists(.//*[matches(local-name(), '^h[0-9]$')])
                            and (every $para in .//p[not(matches(., '^\p{Zs}+$'))]
                                 satisfies $para[a[@href]])
                            and (every $heading in .//*[matches(local-name(), '^h[0-9]$')]
