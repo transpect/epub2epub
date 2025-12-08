@@ -244,6 +244,19 @@
                       |@valign
                       |@width"/>
   
+  <!-- heuristic to remove old html tocs -->
+  
+  <xsl:variable name="toc-heading-regex" as="xs:string"
+                select="'^(Inhalt(sverzeichnis)?|(Table\sof\s)?Contents|Table\sdes\smatières|Tabla\sde\scontenido|(I|Í)ndice)$'"/>
+  
+  <xsl:template match="div[    exists(.//p[a[@href]])
+                           and (every $para in .//p[not(matches(., '^\p{Zs}+$'))]
+                                satisfies $para[a[@href]])
+                           and (every $heading in .//*[matches(local-name(), '^h[0-9]$')]
+                                satisfies matches(normalize-space($heading), $toc-heading-regex, 'i'))]">
+    <xsl:message select="'[info] removed original html toc'"/>
+  </xsl:template>  
+  
   <!-- remove id duplicates -->
   
   <xsl:variable name="ids" select="//@id" as="attribute(id)*"/>
