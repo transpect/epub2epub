@@ -192,6 +192,10 @@
         <p:with-option name="attribute-value" select="/opf:epub/@xml:base"/>
       </p:add-attribute>
       
+      <!-- remove split duplicates -->
+      
+      <p:delete match="/opf:epub/html:html/html:body/html:div[@class eq 'epub-html-split'][following-sibling::*[1][@class eq 'epub-html-split']]"/>
+      
       <tr:store-debug pipeline-step="epub2epub/05-html-plus-opf-patched">
         <p:with-option name="active" select="$debug"/>
         <p:with-option name="base-uri" select="$debug-dir-uri"/>
