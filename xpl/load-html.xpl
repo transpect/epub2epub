@@ -104,6 +104,8 @@
             </p:otherwise>
           </p:choose>
           
+          <p:delete match="/html:html/html:body/html:div[@class eq 'epub-html-split']"/>
+          
           <p:insert match="/html:html/html:body" position="first-child" name="insert-split-point">
             <p:input port="insertion">
               <p:inline>
