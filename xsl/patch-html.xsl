@@ -255,7 +255,16 @@
                            and (every $heading in .//*[matches(local-name(), '^h[0-9]$')]
                                 satisfies matches(normalize-space($heading), $toc-heading-regex, 'i'))]">
     <xsl:message select="'[info] removed original html toc'"/>
-  </xsl:template>  
+  </xsl:template>
+  
+  <!-- remove nested anchors -->
+  
+  <xsl:template match="a[a[not(node())]]">
+    <xsl:copy>
+      <xsl:apply-templates select="@*, node() except a"/>
+    </xsl:copy>
+    <xsl:apply-templates select="a[not(node())]"/>
+  </xsl:template>
   
   <!-- remove id duplicates -->
   
