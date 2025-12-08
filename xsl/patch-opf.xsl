@@ -21,8 +21,7 @@
   
   <xsl:template match="opf:metadata/dc:*[not(normalize-space())]
                       |opf:metadata/opf:meta[not(@name = 'cover') or (@name = 'cover' and $remove-cover = 'yes')]
-                      |opf:metadata/opf:meta[some $name in @name     satisfies preceding-sibling::opf:meta[@name = $name]]
-                      |opf:metadata/opf:meta[some $prop in @property satisfies preceding-sibling::opf:meta[@name = $prop]]
+                      |opf:metadata/opf:meta[(@name = 'cover') and (preceding-sibling::opf:meta[@name = 'cover'])]
                       |opf:guide
                       |opf:manifest/opf:item[@href  = $remove-files-list-list]
                       |opf:manifest/opf:item[@id    = $remove-files-list-list]
