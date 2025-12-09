@@ -104,19 +104,30 @@
             </p:otherwise>
           </p:choose>
           
-          <p:delete match="/html:html/html:body/html:div[@class eq 'epub-html-split']"/>
+          <p:delete match="/html:html/html:body/html:div[@class eq 'epub-html-split']
+                          |/tr:cover/html:html/html:body/html:div[@class eq 'epub-html-split']"/>
           
-          <p:insert match="/html:html/html:body" position="first-child" name="insert-split-point">
-            <p:input port="insertion">
-              <p:inline>
-                <div class="epub-html-split" xmlns="http://www.w3.org/1999/xhtml"/>
-              </p:inline>
-            </p:input>
-          </p:insert>
-          
-          <p:add-attribute match="/html:html/html:body/html:div[@class eq 'epub-html-split']" attribute-name="id">
-            <p:with-option name="attribute-value" select="$idref"/>
-          </p:add-attribute>
+          <p:choose name="choose-to-insert-split-point">
+            <p:when test="p:iteration-position() = 1">
+              
+              <p:identity name="no-split-point-at-first-page"/>
+              
+            </p:when>
+            <p:otherwise>
+              <p:insert match="/html:html/html:body" position="first-child" name="insert-split-point">
+                <p:input port="insertion">
+                  <p:inline>
+                    <div class="epub-html-split" xmlns="http://www.w3.org/1999/xhtml"/>
+                  </p:inline>
+                </p:input>
+              </p:insert>
+              
+              <p:add-attribute match="/html:html/html:body/html:div[@class eq 'epub-html-split']" attribute-name="id">
+                <p:with-option name="attribute-value" select="$idref"/>
+              </p:add-attribute>
+              
+            </p:otherwise>
+          </p:choose>
           
           <p:add-attribute match="/html:html/html:body/*" attribute-name="xml:base">
             <p:with-option name="attribute-value" select="base-uri()"/>
@@ -164,6 +175,8 @@
           
         </p:when>
         <p:otherwise>
+          
+          <!-- cover is created subsequently from generated epub-config -->
           
           <p:delete match="/opf:epub/tr:cover"/>
           
