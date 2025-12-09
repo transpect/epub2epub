@@ -91,6 +91,8 @@
           <p:variable name="is-cover-html" select="(//*:img/tokenize(@src, '/')[last()],
                                                     //*:image/tokenize(@*:href, '/')[last()]) = $cover-name"/>
           
+          <p:delete match="/html:html/html:body/html:div[@class eq 'epub-html-split']"/>
+          
           <p:choose name="choose-to-wrap-cover">
             <p:when test="$is-cover-html = 'true'">
               
@@ -103,9 +105,6 @@
               
             </p:otherwise>
           </p:choose>
-          
-          <p:delete match="/html:html/html:body/html:div[@class eq 'epub-html-split']
-                          |/tr:cover/html:html/html:body/html:div[@class eq 'epub-html-split']"/>
           
           <p:choose name="choose-to-insert-split-point">
             <p:when test="p:iteration-position() = 1">
