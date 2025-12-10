@@ -61,12 +61,13 @@
     <xsl:attribute name="href" select="concat('#', $manifest-item/@id)"/>
   </xsl:template>
   
-  <xsl:template match="/opf:epub/html/body//*[not(@class eq 'epub-html-split')]/@id">
+  <xsl:template match="/opf:epub/html/body//*[not(@class eq 'epub-html-split')]/@id
+                      |/opf:epub/html/body//*[not(@class eq 'epub-html-split')]/@aria-describedby">
     <xsl:variable name="manifest-item" as="element(opf:item)"
                   select="epub:item-from-filename(
                             tokenize(ancestor::*[@xml:base][1]/@xml:base, '/')[last()]
                           )"/>
-    <xsl:attribute name="id" select="concat($manifest-item/@id, '_', .)"/>
+    <xsl:attribute name="{local-name()}" select="concat($manifest-item/@id, '_', .)"/>
   </xsl:template>
   
   <xsl:template match="img[not(@alt)]">
