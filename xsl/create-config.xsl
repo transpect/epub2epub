@@ -43,7 +43,7 @@
       </types>
       
       <metadata>
-        <xsl:apply-templates select="opf:package/opf:metadata/*"/>  
+        <xsl:apply-templates select="opf:package/opf:metadata/*[not(@name = 'cover')]"/>  
       </metadata>
       
       <hierarchy media-type="application/xhtml+xml" max-population="40" max-text-length="200000">
