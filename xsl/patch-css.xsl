@@ -27,9 +27,15 @@
     <xsl:param name="css" as="xs:string"/>
     <xsl:sequence select="replace(
                             replace(
-                              replace($css, '&#xD;', ''), 
-                                '(font-style:\s*italic\s*),\s*oblique', '$1'
-                            ), '(margin|padding)(-(top|right|bottom|left))?(:)?(\s*0)mm', '$1$2$3:$5'
+                              replace(
+                                replace(
+                                  replace(
+                                    replace($css, '&#xD;', ''), 
+                                      '(font-style:\s*italic\s*),\s*oblique', '$1'
+                                    ), '(font-)(weight)(:\s*italic\s*)', '$1style$3'
+                                ), '(margin|padding)(-(top|right|bottom|left))?(:)?(\s*0)mm', '$1$2$3:$5'
+                              ), '(padding)(-(top|right|bottom|left))?(:)?(-\.|-)?', '$1$2$4'
+                            ), '([\d])\.([a-z])', '$1$2'
                           )"/>
   </xsl:function>
   
