@@ -33,6 +33,10 @@
   
   <p:delete match="/opf:epub/html:html//html:nav[@epub:type eq 'landmarks']" name="del-landmarks"/>
   
+  <!-- If no EPUB 3.0 toc nav is found, we generate it from the NCX. If one 
+       exists, we keep it. The hide-toc option applies only to generated ToCs,
+       not pre-existing ones. -->
+  
   <p:choose>
     <p:when test="not(/opf:epub/html:html//html:nav[@epub:type eq 'toc'])">
       
@@ -71,18 +75,7 @@
     </p:when>
     <p:otherwise>
       
-      <p:choose>
-        <p:when test="$hide-toc eq 'yes'">
-          
-          <p:add-attribute match="/opf:epub/html:html//html:nav[@epub:type eq 'toc']" attribute-name="hidden" attribute-value="hidden"/>
-          
-        </p:when>
-        <p:otherwise>
-          
-          <p:identity/>
-          
-        </p:otherwise>
-      </p:choose>
+      <p:identity/>
       
       <cx:message name="msg-2">
         <p:with-option name="message" select="'[info] toc nav found, skip creating toc nav from ncx'"/>
