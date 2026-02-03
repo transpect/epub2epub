@@ -102,9 +102,9 @@
       Page index after there the toc is inserted
     </p:documentation>
   </p:option>
-  <p:option name="hide-toc" select="'no'">
+  <p:option name="hide-toc" select="'yes'">
     <p:documentation>
-      Whether the generated HTML toc should be hidden.
+      Whether the generated HTML toc should be hidden. Default is "yes" to prevent duplicate HTML ToCs.
     </p:documentation>
   </p:option>
   <p:option name="remove-cover" select="'no'">
