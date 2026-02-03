@@ -34,6 +34,7 @@
   </p:output>
   
   <p:option name="href"/>
+  <p:option name="hide-toc" select="'no'"/>
   <p:option name="debug" select="'no'"/>
   <p:option name="debug-dir-uri" select="'debug'"/>
   <p:option name="terminate-on-error" select="'no'"/>
@@ -75,6 +76,7 @@
             <p:document href="../xsl/patch-css.xsl"/>
           </p:input>
           <p:with-param name="href" select="$css-uri"/>
+          <p:with-param name="hide-toc" select="$hide-toc"/>
         </p:xslt>
         
         <tr:store-debug name="debug-css">

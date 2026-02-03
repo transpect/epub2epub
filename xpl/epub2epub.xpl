@@ -236,6 +236,7 @@
         <p:pipe port="css" step="epub2epub"/>
       </p:input>
       <p:with-option name="href" select="$epub-href"/>
+      <p:with-option name="hide-toc" select="$hide-toc"/>
       <p:with-option name="debug" select="$debug"/>
       <p:with-option name="debug-dir-uri" select="$debug-dir-uri"/>
       <p:with-option name="terminate-on-error" select="$terminate-on-error"/>
