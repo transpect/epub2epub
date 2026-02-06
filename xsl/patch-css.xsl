@@ -13,6 +13,9 @@
   <xsl:variable name="additional-css" as="document-node(element(c:data))?" 
                 select="collection()[2]"/>
   
+  <xsl:variable name="css-unit-regex" as="xs:string" 
+                select="'(cm|mm|Q|in|pc|pt|px|r?em|vw|vh|%)'"/>
+  
   <xsl:template name="main">
     <xsl:variable name="css" select="if(unparsed-text-available($href))
                                      then unparsed-text($href)
@@ -45,7 +48,7 @@
                                     ), '(font-)(weight)(:\s*italic\s*)', '$1style$3'
                                 ), '(margin|padding)(-(top|right|bottom|left))?(:)?(\s*0)mm', '$1$2$3:$5'
                               ), '(padding)(-(top|right|bottom|left))?(:)?(-\.|-)?', '$1$2$4'
-                            ), '([\d])\.([a-z])', '$1$2'
+                            ), concat(':\s*([\d])\.', $css-unit-regex), ':$1$2'
                           )"/>
   </xsl:function>
   
