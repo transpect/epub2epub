@@ -10,6 +10,8 @@
   <xsl:param name="hide-toc"   as="xs:string"/>
   <xsl:param name="nav-exists" as="xs:boolean"/>
   
+  <xsl:import href="http://transpect.io/xslt-util/strings/xsl/regex-functions.xsl"/>
+  
   <xsl:variable name="additional-css" as="document-node(element(c:data))?" 
                 select="collection()[2]"/>
   
@@ -38,18 +40,45 @@
   
   <xsl:function name="tr:patch-css" as="xs:string?">
     <xsl:param name="css" as="xs:string"/>
+    <xsl:sequence select="tr:replace-list(
+                          $css,
+                          ('&#xD;',
+                           '(font-style:\s*italic\s*),\s*oblique',
+                           '(font-)(weight)(:\s*italic\s*)',
+                           '(margin|padding)(-(top|right|bottom|left))?(:)?(\s*0)mm',
+                           '(padding)(-(top|right|bottom|left))?(:)?(-\.|-)?',
+                           concat(':\s*([\d])\.', $css-unit-regex),
+                           '^a[\p{Z}\p{Cc}]*\{[\p{Z}\p{Cc}]*text-decoration:[\p{Z}\p{Cc}]*none[\p{Z}\p{Cc}]*;[\p{Z}\p{Cc}]*\}'
+                          ),
+                          ('',
+                           '$1',
+                           '$1style$3',
+                           '$1$2$3:$5',
+                           '$1$2$4',
+                           ':$1$2',
+                           ''
+                          ),
+                          'mi'
+                        )"/>
+  </xsl:function>
+  
+  
+  <!--<xsl:function name="tr:patch-css" as="xs:string?">
+    <xsl:param name="css" as="xs:string"/>
     <xsl:sequence select="replace(
                             replace(
                               replace(
                                 replace(
                                   replace(
-                                    replace($css, '&#xD;', ''), 
-                                      '(font-style:\s*italic\s*),\s*oblique', '$1'
-                                    ), '(font-)(weight)(:\s*italic\s*)', '$1style$3'
-                                ), '(margin|padding)(-(top|right|bottom|left))?(:)?(\s*0)mm', '$1$2$3:$5'
-                              ), '(padding)(-(top|right|bottom|left))?(:)?(-\.|-)?', '$1$2$4'
-                            ), concat(':\s*([\d])\.', $css-unit-regex), ':$1$2'
+                                    replace(
+                                      replace($css, '&#xD;', ''), (:remove carriage returns :)
+                                      '(font-style:\s*italic\s*),\s*oblique', '$1' (:font-weight/style confusions :)
+                                    ), '(font-)(weight)(:\s*italic\s*)', '$1style$3' (:deprecated css:)
+                                  ), '(margin|padding)(-(top|right|bottom|left))?(:)?(\s*0)mm', '$1$2$3:$5' (:zero is unitless:)
+                                ), '(padding)(-(top|right|bottom|left))?(:)?(-\.|-)?', '$1$2$4' (:invalid negative padding values:)
+                              ), concat(':\s*([\d])\.', $css-unit-regex), ':$1$2' (: dot between number and unit :)
+                            ), '^a[\p{Z}\p{Cc}]*\{[\p{Z}\p{Cc}]*text-decoration:[\p{Z}\p{Cc}]none[\p{Z}\p{Cc}]*;[\p{Z}\p{Cc}]*\}', '', 'mi' (: links must be underlined :)
                           )"/>
-  </xsl:function>
+  </xsl:function>-->
   
 </xsl:stylesheet>
