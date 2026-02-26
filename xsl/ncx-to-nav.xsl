@@ -18,9 +18,7 @@
   <xsl:variable name="ncx"  select="/opf:epub/ncx:ncx" as="element(ncx:ncx)"/>
   
   <xsl:template match="/opf:epub/html:html/html:body/html:div[@class eq 'epub-html-split'][position() = $toc-page]" priority="10">
-    <xsl:if test="$hide-toc ne 'yes'">
-      <div class="epub-html-split"/>
-    </xsl:if>
+    <div class="epub-html-split"/>
     <xsl:apply-templates select="/opf:epub/ncx:ncx" mode="toc"/>
     <xsl:copy>
       <xsl:apply-templates select="@*, node()"/>
