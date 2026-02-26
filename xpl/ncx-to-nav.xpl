@@ -59,7 +59,7 @@
         </p:input>
       </p:insert>
       
-      <tr:store-debug pipeline-step="epub2epub/07-html-plus-opf-plus-ncx">
+      <tr:store-debug pipeline-step="epub2epub/08-html-plus-opf-plus-ncx">
         <p:with-option name="active" select="$debug"/>
         <p:with-option name="base-uri" select="$debug-dir-uri"/>
       </tr:store-debug>
@@ -84,7 +84,7 @@
     </p:otherwise>
   </p:choose>
       
-  <tr:store-debug pipeline-step="epub2epub/08-ncx-to-nav">
+  <tr:store-debug pipeline-step="epub2epub/09-ncx-to-nav">
     <p:with-option name="active" select="$debug"/>
     <p:with-option name="base-uri" select="$debug-dir-uri"/>
   </tr:store-debug>
