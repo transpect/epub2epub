@@ -11,6 +11,7 @@
   
   <xsl:param name="remove-chars-regex" select="'\s'" as="xs:string"/>
   <xsl:param name="html-lang" as="xs:string?"/>
+  <xsl:param name="toc-page" as="xs:integer"/>
   
   <xsl:mode on-no-match="shallow-copy"/>
     
@@ -266,6 +267,18 @@
       <xsl:apply-templates select="@*, node() except a"/>
     </xsl:copy>
     <xsl:apply-templates select="a[not(node())]"/>
+  </xsl:template>
+  
+  <!-- insert epub:type="bodymatter" for apple devices -->
+  
+  <xsl:template match="div[@class eq 'epub-html-split'][position() = $toc-page][not(//nav)]
+                      |div[@class eq 'epub-html-split'][following-sibling::*[1][self::nav]]">
+    <xsl:copy>
+      <xsl:if test="not(//@epub:type[. = 'bodymatter'])">
+        <xsl:attribute name="epub:type" select="'bodymatter'"/>
+      </xsl:if>
+      <xsl:apply-templates select="@*, node()"/>
+    </xsl:copy>
   </xsl:template>
   
   <!-- remove id duplicates -->

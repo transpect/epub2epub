@@ -217,6 +217,7 @@
       <p:with-option name="remove-cover" select="$remove-cover"/>
       <p:with-option name="remove-chars-regex" select="$remove-chars-regex"/>
       <p:with-option name="html-lang" select="$html-lang"/>
+      <p:with-option name="toc-page" select="$toc-page"/>
       <p:with-option name="debug" select="$debug"/>
       <p:with-option name="debug-dir-uri" select="$debug-dir-uri"/>
       <p:with-option name="terminate-on-error" select="$terminate-on-error"/>

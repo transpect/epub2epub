@@ -21,9 +21,6 @@
     <div class="epub-html-split"/>
     <xsl:apply-templates select="/opf:epub/ncx:ncx" mode="toc"/>
     <xsl:copy>
-      <xsl:if test="not(//@epub:type[. = 'bodymatter'])">
-        <xsl:attribute name="epub:type" select="'bodymatter'"/>  
-      </xsl:if>
       <xsl:apply-templates select="@*, node()"/>
     </xsl:copy>
   </xsl:template>

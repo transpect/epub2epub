@@ -45,6 +45,7 @@
   <p:option name="remove-cover" select="'no'"/>
   <p:option name="remove-chars-regex" select="'\s'"/>
   <p:option name="html-lang" select="'en'"/>
+  <p:option name="toc-page" select="4"/>
   <p:option name="debug" select="'no'"/>
   <p:option name="debug-dir-uri" select="'debug'"/>
   <p:option name="terminate-on-error" select="'no'"/>
@@ -197,6 +198,7 @@
         </p:input>
         <p:with-param name="remove-chars-regex" select="$remove-chars-regex"/>
         <p:with-param name="html-lang" select="$html-lang"/>
+        <p:with-param name="toc-page" select="$toc-page"/>
         <p:with-param name="remove-cover" select="$remove-cover"/>
       </p:xslt>
       
