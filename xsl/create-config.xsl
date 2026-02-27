@@ -38,6 +38,7 @@
         <type name="landmarks" heading="Übersicht" hidden="true" types="cover titlepage imprint copyright-page toc bodymatter preface"/>
         <type name="toc" heading="Inhaltsverzeichnis" hidden="true" fallback-id-for-landmark="rendered_toc"/> 
         <type name="cover" heading="Cover" file="cover" guide-type="text"/>
+        <type name="titlepage" heading="Titel" file="titlepage" guide-type="text"/>
         <type name="bodymatter" heading="Anfang des Buches" guide-type="text"/>
         <type name="imprint" heading="Impressum" file="imprint" guide-type="text"/>
       </types>
