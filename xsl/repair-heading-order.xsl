@@ -18,9 +18,12 @@
   <xsl:variable name="headings" as="element()*" 
                 select="//*[local-name() = ('h1', 'h2', 'h3', 'h4', 'h5', 'h6')]"/>
   
+  <xsl:variable name="heading-ids" as="xs:string*" 
+                select="$headings/generate-id()"/>
+  
   <xsl:function name="epub:repair-heading-order">
     <xsl:param name="heading" as="element()*"/>
-    <xsl:variable name="heading-index" select="index-of($headings, $heading)" as="xs:integer"/>
+    <xsl:variable name="heading-index" select="index-of($heading-ids, $heading/generate-id())" as="xs:integer*"/>
     <xsl:variable name="current-heading-level" as="xs:integer"
                   select="xs:integer(
                             substring-after($heading/local-name(), 'h')
