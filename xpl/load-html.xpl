@@ -44,6 +44,7 @@
   <p:option name="href"/>
   <p:option name="remove-cover" select="'no'"/>
   <p:option name="remove-chars-regex" select="'\s'"/>
+  <p:option name="repair-heading-order" select="'yes'"/>
   <p:option name="html-lang" select="'en'"/>
   <p:option name="toc-page" select="4"/>
   <p:option name="debug" select="'no'"/>
@@ -51,6 +52,7 @@
   <p:option name="terminate-on-error" select="'no'"/>
   
   <p:import href="error-handler.xpl"/>
+  <p:import href="repair-heading-order.xpl"/>
   <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl"/>
   <p:import href="http://transpect.io/xproc-util/store-debug/xpl/store-debug.xpl"/>
   
@@ -201,6 +203,8 @@
         <p:with-param name="toc-page" select="$toc-page"/>
         <p:with-param name="remove-cover" select="$remove-cover"/>
       </p:xslt>
+      
+      <e2e:repair-heading-order name="repair-heading-order"/>
       
       <p:add-attribute name="copy-xml-base" attribute-name="xml:base" match="/opf:epub/html:html">
         <p:with-option name="attribute-value" select="/opf:epub/@xml:base"/>

@@ -92,8 +92,10 @@
     </span>
   </xsl:template>
   
-  <xsl:template match="*[matches(local-name(), '^h[1-6]$')]
-                        [not(normalize-space()) or matches(., '^\p{Zs}+$')]">
+  <!-- remove empty headings -->
+  
+  <xsl:template match="*[local-name() = ('h1', 'h2', 'h3', 'h4', 'h5', 'h6')]
+                        [not(normalize-space()) or matches(., '^\p{Zs}+$')]" priority="5">
     <div>
       <xsl:apply-templates select="@*, node()"/>
     </div>

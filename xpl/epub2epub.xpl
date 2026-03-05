@@ -107,6 +107,11 @@
       Whether the generated HTML toc should be hidden. Default is "yes" to prevent duplicate HTML ToCs.
     </p:documentation>
   </p:option>
+  <p:option name="repair-heading-order" select="'yes'">
+    <p:documentation>
+      Should HTML headings such as h1, h2, and h3 be adjusted to avoid skipping levels in the hierarchy?
+    </p:documentation>
+  </p:option>
   <p:option name="remove-cover" select="'no'">
     <p:documentation>
       Whether the cover should be removed or not.
@@ -216,6 +221,7 @@
       <p:with-option name="href" select="$epub-href"/>
       <p:with-option name="remove-cover" select="$remove-cover"/>
       <p:with-option name="remove-chars-regex" select="$remove-chars-regex"/>
+      <p:with-option name="repair-heading-order" select="$repair-heading-order"/>
       <p:with-option name="html-lang" select="$html-lang"/>
       <p:with-option name="toc-page" select="$toc-page"/>
       <p:with-option name="debug" select="$debug"/>
