@@ -68,7 +68,9 @@
   
   <!-- e2e:create-sequential-heading-order( xs:integer* ) => xs:integer*
        Takes a sequence of heading levels (e.g., 1, 2, 1, 4) and returns 
-       true or false depending on whether they form a logical order. -->
+       the corrected logical heading levels (e.g. 1, 2, 1, 2). Subheadings 
+       of the same level are corrected together to maintain the proper hierarchy.
+       -->
   
   <xsl:function name="e2e:create-sequential-heading-order" as="xs:integer*">
     <xsl:param name="heading-levels" as="xs:integer*"/>
