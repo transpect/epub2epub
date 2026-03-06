@@ -23,11 +23,21 @@
                       |h4
                       |h5
                       |h6">
-    <xsl:variable name="sequential-heading-level" as="xs:integer" select="e2e:get-sequential-heading-level(.)"/>
-    <xsl:element name="h{$sequential-heading-level}">
-      <xsl:apply-templates select="@*, node()"/>
-    </xsl:element>
+    <xsl:sequence select="e2e:get-sequential-heading(.)"/>
   </xsl:template>
+  
+  <!-- e2e:e2e:get-sequential-heading( element() ) => element()
+       Shorthand function that automatically returns
+       the adjusted heading element, e.g. <h4/> => <h3/> -->
+  
+  <xsl:function name="e2e:get-sequential-heading" as="element()">
+    <xsl:param name="heading" as="element()"/>
+    <xsl:variable name="sequential-heading-level" as="xs:integer" 
+                  select="e2e:get-sequential-heading-level($heading)"/>
+    <xsl:element name="h{$sequential-heading-level}">
+      <xsl:sequence select="$heading/@*, $heading/node()"/>
+    </xsl:element>
+  </xsl:function>
   
   <!-- e2e:get-sequential-heading-level( element(), element()+ ) => xs:integer
        First argument is the current heading and the second argument are all headings 
