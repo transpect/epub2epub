@@ -26,7 +26,7 @@
     <xsl:sequence select="e2e:get-sequential-heading(.)"/>
   </xsl:template>
   
-  <!-- e2e:e2e:get-sequential-heading( element() ) => element()
+  <!-- e2e:get-sequential-heading( element() ) => element()
        Shorthand function that automatically returns
        the adjusted heading element, e.g. <h4/> => <h3/> -->
   
