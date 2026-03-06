@@ -204,7 +204,14 @@
         <p:with-param name="remove-cover" select="$remove-cover"/>
       </p:xslt>
       
-      <e2e:repair-heading-order name="repair-heading-order"/>
+      <p:choose>
+        <p:when test="$repair-heading-order eq 'yes'">
+          <e2e:repair-heading-order name="repair-heading-order"/>    
+        </p:when>
+        <p:otherwise>
+          <p:identity/>
+        </p:otherwise>
+      </p:choose>
       
       <p:add-attribute name="copy-xml-base" attribute-name="xml:base" match="/opf:epub/html:html">
         <p:with-option name="attribute-value" select="/opf:epub/@xml:base"/>
