@@ -9,7 +9,7 @@
   
   <p:documentation>This step fixes the heading hierarchy. For example, 
     having an h1 followed directly by an h3 is not ideal for accessibility. 
-    This step repairs the hierarchy recursively.
+    This step repairs the hierarchy at once.
   </p:documentation>
   
   <p:input port="source">
@@ -24,37 +24,12 @@
     </p:documentation>
   </p:output>
   
-  <p:option name="heading-level" select="xs:integer(3)">
-    <p:documentation>
-      The heading level to be corrected in each run. We start with h3 because 
-      the difference between h1 and h2 is already the maximum 
-      allowed (1), and therefore is considered acceptable
-    </p:documentation>
-  </p:option>
-  
   <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl"/>
   
   <p:xslt name="patch-html">
     <p:input port="stylesheet">
       <p:document href="../xsl/repair-heading-order.xsl"/>
     </p:input>
-    <p:with-param name="heading-level" select="$heading-level"/>
-  </p:xslt>
-  
-  <p:choose>
-    <p:when test="xs:integer($heading-level) lt 7">
-      
-      <cx:message>
-        <p:with-option name="message" select="'[info] repair heading level: ', $heading-level"/>
-      </cx:message>
-      
-      <e2e:repair-heading-order>
-        <p:with-option name="heading-level" select="$heading-level + 1"/>
-      </e2e:repair-heading-order>
-    </p:when>
-    <p:otherwise>
-      <p:identity/>
-    </p:otherwise>
-  </p:choose>
+  </p:xslt> 
   
 </p:declare-step>
