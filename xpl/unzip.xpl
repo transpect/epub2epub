@@ -95,7 +95,7 @@
         <p:with-option name="debug" select="$debug"/>
         <p:with-option name="debug-dir-uri" select="$debug-dir-uri"/>
         <p:with-option name="terminate-on-error" select="$terminate-on-error"/>
-        <p:with-option name="pipeline-step" select="'epub-migrate/00-unzip'"/>
+        <p:with-option name="pipeline-step" select="'epub2epub/00-unzip'"/>
       </e2e:error-handler>
 
     </p:catch>

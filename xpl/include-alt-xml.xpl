@@ -128,7 +128,7 @@
         <p:with-option name="debug" select="$debug"/>
         <p:with-option name="debug-dir-uri" select="$debug-dir-uri"/>
         <p:with-option name="terminate-on-error" select="$terminate-on-error"/>
-        <p:with-option name="pipeline-step" select="'epub-migrate/05-alt-text'"/>
+        <p:with-option name="pipeline-step" select="'epub2epub/05-alt-text'"/>
       </e2e:error-handler>
       
     </p:catch>

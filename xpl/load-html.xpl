@@ -15,13 +15,6 @@
     <p:documentation>Expects the OPF document</p:documentation>
   </p:input>
 
-  <p:input port="stylesheet" primary="false">
-    <p:documentation>
-      Custom XSLT that is applied on the combined OPF/HTML XML document.
-    </p:documentation>
-    <p:document href="../xsl/custom-xslt-placeholder.xsl"/>
-  </p:input>
-
   <p:output port="result" primary="true">
     <p:documentation>
       opf:epub XML document containing 
@@ -59,7 +52,7 @@
   <p:try name="try-load-html">
     <p:group>
       <p:output port="result" primary="true">
-        <p:pipe port="result" step="apply-custom-xslt"/>
+        <p:pipe port="result" step="remove-split-duplicates"/>
       </p:output>
       <p:output port="html" primary="false" sequence="true">
         <p:pipe port="result" step="filter-html"/>
@@ -219,35 +212,19 @@
       
       <!-- remove split duplicates -->
       
-      <p:delete match="/opf:epub/html:html/html:body/html:div[@class eq 'epub-html-split'][following-sibling::*[1][@class eq 'epub-html-split']]"/>
+      <p:delete match="/opf:epub/html:html/html:body/html:div[@class eq 'epub-html-split']
+                                                             [following-sibling::*[1][@class eq 'epub-html-split']]"/>
+      
+      <p:identity name="remove-split-duplicates"/>
       
       <tr:store-debug pipeline-step="epub2epub/05-html-plus-opf-patched">
         <p:with-option name="active" select="$debug"/>
         <p:with-option name="base-uri" select="$debug-dir-uri"/>
       </tr:store-debug>
       
-      <p:sink/>
-      
-      <p:xslt name="apply-custom-xslt">
-        <p:input port="source">
-          <p:pipe port="result" step="copy-xml-base"/>
-        </p:input>
-        <p:input port="stylesheet">
-          <p:pipe port="stylesheet" step="e2e-load-html"/>
-        </p:input>
-        <p:input port="parameters">
-          <p:empty/>
-        </p:input>
-      </p:xslt>
-      
-      <tr:store-debug pipeline-step="epub2epub/06-custom-xslt">
-        <p:with-option name="active" select="$debug"/>
-        <p:with-option name="base-uri" select="$debug-dir-uri"/>
-      </tr:store-debug>
-      
       <p:filter select="/opf:epub/html:html" name="filter-html"/>
       
-      <tr:store-debug pipeline-step="epub2epub/07-html-only">
+      <tr:store-debug pipeline-step="epub2epub/06-html-only">
         <p:with-option name="active" select="$debug"/>
         <p:with-option name="base-uri" select="$debug-dir-uri"/>
       </tr:store-debug>
@@ -276,7 +253,7 @@
         <p:with-option name="debug" select="$debug"/>
         <p:with-option name="debug-dir-uri" select="$debug-dir-uri"/>
         <p:with-option name="terminate-on-error" select="$terminate-on-error"/>
-        <p:with-option name="pipeline-step" select="'epub-migrate/04-html'"/>
+        <p:with-option name="pipeline-step" select="'epub2epub/04-html-plus-opf'"/>
       </e2e:error-handler>
 
     </p:catch>

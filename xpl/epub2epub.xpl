@@ -163,6 +163,7 @@
   <p:import href="copy-resources.xpl"/>
   <p:import href="create-config.xpl"/>
   <p:import href="ncx-to-nav.xpl"/>
+  <p:import href="apply-custom-xslt.xpl"/>
   
   <tr:file-uri name="normalize-epub-path">
     <p:with-option name="filename" select="$href"/>
@@ -215,9 +216,6 @@
     </e2e:load-rootfile>
     
     <e2e:load-html name="load-html">
-      <p:input port="stylesheet">
-        <p:pipe port="stylesheet" step="epub2epub"/>
-      </p:input>
       <p:with-option name="href" select="$epub-href"/>
       <p:with-option name="remove-cover" select="$remove-cover"/>
       <p:with-option name="remove-chars-regex" select="$remove-chars-regex"/>
@@ -273,6 +271,14 @@
       <p:with-option name="debug-dir-uri" select="$debug-dir-uri"/>
     </e2e:create-config>
     
+    <e2e:apply-custom-xslt name="apply-custom-xslt" cx:depends-on="create-config">
+      <p:input port="stylesheet">
+        <p:pipe port="stylesheet" step="epub2epub"/>
+      </p:input>
+      <p:with-option name="debug" select="$debug"/>
+      <p:with-option name="debug-dir-uri" select="$debug-dir-uri"/>
+    </e2e:apply-custom-xslt>
+    
     <p:choose name="choose-create-epub" cx:depends-on="create-config">
       <p:when test="$create-epub eq 'yes'">
         <p:output port="result" primary="true"/>
@@ -284,10 +290,10 @@
         </p:output>
         <epub:convert name="epub-convert">
           <p:input port="source" select="/opf:epub/html:html">
-            <p:pipe port="result" step="create-config"/>
+            <p:pipe port="result" step="apply-custom-xslt"/>
           </p:input>
           <p:input port="meta" select="/opf:epub/epub-config">
-            <p:pipe port="result" step="create-config"/>
+            <p:pipe port="result" step="apply-custom-xslt"/>
           </p:input>
           <p:input port="conf">
             <p:empty/>

@@ -20,6 +20,7 @@
   <xsl:mode on-no-match="shallow-copy"/>
   
   <xsl:template match="opf:metadata/dc:*[not(normalize-space())]
+                      |opf:metadata/dc:identifier[not(@id) and count(parent::*/dc:identifier) gt 1]
                       |opf:metadata/opf:meta[not(@name = 'cover') or (@name = 'cover' and $remove-cover = 'yes')]
                       |opf:metadata/opf:meta[(@name = 'cover') and (preceding-sibling::opf:meta[@name = 'cover'])]
                       |opf:guide
