@@ -30,6 +30,9 @@
     <p:input port="stylesheet">
       <p:document href="../xsl/repair-heading-order.xsl"/>
     </p:input>
+    <p:input port="parameters">
+      <p:empty/>
+    </p:input>
   </p:xslt> 
   
 </p:declare-step>
