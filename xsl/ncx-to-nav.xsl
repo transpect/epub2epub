@@ -76,6 +76,8 @@
     </xsl:if>
   </xsl:template>
   
+  <xsl:template match="ncx:navPoint[matches(ncx:navLabel/ncx:text, '^\p{Zs}+$')]" mode="toc" priority="5"/>
+  
   <xsl:template match="ncx:text" mode="toc">
     <xsl:apply-templates mode="#current"/>
   </xsl:template>
