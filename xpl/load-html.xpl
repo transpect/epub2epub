@@ -36,6 +36,9 @@
   
   <p:option name="href"/>
   <p:option name="remove-cover" select="'no'"/>
+  <p:option name="wrap-cover" select="'yes'">
+    <p:documentation>if set to no, cover will not be handled separately</p:documentation>
+  </p:option>
   <p:option name="remove-chars-regex" select="'\s'"/>
   <p:option name="repair-heading-order" select="'yes'"/>
   <p:option name="html-lang" select="'en'"/>
@@ -90,7 +93,7 @@
           <p:delete match="/html:html/html:body/html:div[@class eq 'epub-html-split']"/>
           
           <p:choose name="choose-to-wrap-cover">
-            <p:when test="$is-cover-html = 'true'">
+            <p:when test="$is-cover-html = 'true' and $wrap-cover = 'yes'">
               
               <p:wrap match="/html:html" wrapper="tr:cover"/>
                           
