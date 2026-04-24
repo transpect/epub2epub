@@ -46,7 +46,7 @@
     <xsl:variable name="fileref-att" select="@*[local-name() = $fileref-att-names]" as="attribute()"/>
     <xsl:variable name="fileref" select="replace(@*[local-name() = $fileref-att-names], '\.\./', '')" as="xs:string"/>
     <xsl:choose>
-      <xsl:when test="$resources[matches(@opf-name, $fileref)]">
+      <xsl:when test="$resources[matches(@opf-name, $fileref) or starts-with($fileref, 'cover.')]">
         <xsl:copy>
           <xsl:apply-templates select="@*, node()" mode="#current"/>
         </xsl:copy>  
@@ -65,7 +65,8 @@
   
   <xsl:template match="html:html//*/@*[local-name() = $fileref-att-names]
                                       [not(matches(., $protocol-exclusion-regex))]
-                                      [not(matches(., '\.x?html$', 'i'))]">
+                                      [not(matches(., '\.x?html$', 'i'))]
+                                      [not(starts-with(., 'cover.'))]">
     <xsl:param name="resources" as="element(c:file)*" tunnel="yes"/>
     <xsl:variable name="fileref-regex" select="concat('^', replace(., '\.\./', ''), '$')" as="xs:string"/>
     <xsl:variable name="normalized-fileref" as="element(c:file)" 

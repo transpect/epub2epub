@@ -195,9 +195,9 @@
           <p:document href="../xsl/patch-html.xsl"/>
         </p:input>
         <p:with-param name="remove-chars-regex" select="$remove-chars-regex"/>
+        <p:with-param name="remove-cover" select="$remove-cover"/>
         <p:with-param name="html-lang" select="$html-lang"/>
         <p:with-param name="toc-page" select="$toc-page"/>
-        <p:with-param name="remove-cover" select="$remove-cover"/>
       </p:xslt>
       
       <p:choose>

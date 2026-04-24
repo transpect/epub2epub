@@ -10,6 +10,7 @@
   version="3.0">
   
   <xsl:param name="remove-chars-regex" select="'\s'" as="xs:string"/>
+  <xsl:param name="remove-cover" as="xs:string"/>
   <xsl:param name="html-lang" as="xs:string?"/>
   <xsl:param name="toc-page" as="xs:integer"/>
   
@@ -40,10 +41,12 @@
   <!-- always add opf item as suffix to ids and internal links -->
   
   <xsl:template match="/opf:epub/html/body//a/@href[contains(., '#')][not(starts-with(., '#'))]
-                                                   [not(matches(.,'^(https?|ftp|mailto):(//)?'))]">  
+                                                   [not(matches(.,'^(https?|ftp|mailto):(//)?'))]">
     <xsl:variable name="manifest-item" as="element(opf:item)"
                   select="epub:item-from-filename(substring-before(., '#'))"/>
-    <xsl:attribute name="href" select="concat('#', $manifest-item/@id, '_', substring-after(., '#'))"/>
+    <xsl:attribute name="href" select="if(starts-with(., 'cover.xhtml'))
+                                       then .
+                                       else concat('#', $manifest-item/@id, '_', substring-after(., '#'))"/>
   </xsl:template>
   
   <xsl:template match="/opf:epub/html/body//a/@href[contains(., '#')][starts-with(., '#')]
