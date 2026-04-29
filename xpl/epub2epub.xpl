@@ -279,6 +279,13 @@
       <p:with-option name="debug-dir-uri" select="$debug-dir-uri"/>
     </e2e:apply-custom-xslt>
     
+    <p:store indent="true" include-content-type="true">
+      <p:input port="source" select="/opf:epub/epub-config">
+        <p:pipe port="result" step="apply-custom-xslt"/>
+      </p:input>
+      <p:with-option name="href" select="concat($outdir, '/', 'epub-config.xml')"/>
+    </p:store>
+    
     <p:choose name="choose-create-epub" cx:depends-on="create-config">
       <p:when test="$create-epub eq 'yes'">
         <p:output port="result" primary="true"/>
@@ -314,7 +321,11 @@
         <p:output port="report">
           <p:empty/>
         </p:output>
-        <p:identity/>
+        <p:identity name="forward">
+          <p:input port="source">
+            <p:pipe port="result" step="apply-custom-xslt"/>
+          </p:input>
+        </p:identity>
       </p:otherwise>
     </p:choose>
     

@@ -40,10 +40,6 @@
     <p:with-param name="remove-chars-regex" select="$remove-chars-regex"/>
   </p:xslt>
   
-  <p:store indent="true" include-content-type="true">
-    <p:with-option name="href" select="concat($outdir, '/', 'epub-config.xml')"/>
-  </p:store>
-  
   <p:insert name="insert-config" match="/opf:epub" position="last-child">
     <p:input port="source">
       <p:pipe port="source" step="e2e-create-config"/>
