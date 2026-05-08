@@ -92,11 +92,27 @@
           
           <p:delete match="/html:html/html:body/html:div[@class eq 'epub-html-split']"/>
           
+          <p:insert match="/html:html/html:body" position="first-child" name="insert-split-point">
+            <p:input port="insertion">
+              <p:inline>
+                <div class="epub-html-split" xmlns="http://www.w3.org/1999/xhtml"/>
+              </p:inline>
+            </p:input>
+          </p:insert>
+              
+          <p:add-attribute match="/html:html/html:body/html:div[@class eq 'epub-html-split']" attribute-name="id">
+            <p:with-option name="attribute-value" select="$idref"/>
+          </p:add-attribute>
+          
+          <p:add-attribute match="/html:html/html:body/*" attribute-name="xml:base">
+            <p:with-option name="attribute-value" select="base-uri()"/>
+          </p:add-attribute>
+          
           <p:choose name="choose-to-wrap-cover">
             <p:when test="$is-cover-html = 'true' and $wrap-cover = 'yes'">
               
               <p:wrap match="/html:html" wrapper="tr:cover"/>
-                          
+              
             </p:when>
             <p:otherwise>
               
@@ -104,32 +120,6 @@
               
             </p:otherwise>
           </p:choose>
-          
-          <p:choose name="choose-to-insert-split-point">
-            <p:when test="p:iteration-position() = 1">
-              
-              <p:identity name="no-split-point-at-first-page"/>
-              
-            </p:when>
-            <p:otherwise>
-              <p:insert match="/html:html/html:body" position="first-child" name="insert-split-point">
-                <p:input port="insertion">
-                  <p:inline>
-                    <div class="epub-html-split" xmlns="http://www.w3.org/1999/xhtml"/>
-                  </p:inline>
-                </p:input>
-              </p:insert>
-              
-              <p:add-attribute match="/html:html/html:body/html:div[@class eq 'epub-html-split']" attribute-name="id">
-                <p:with-option name="attribute-value" select="$idref"/>
-              </p:add-attribute>
-              
-            </p:otherwise>
-          </p:choose>
-          
-          <p:add-attribute match="/html:html/html:body/*" attribute-name="xml:base">
-            <p:with-option name="attribute-value" select="base-uri()"/>
-          </p:add-attribute>
         
         </p:group>
         
@@ -164,22 +154,10 @@
         <p:with-option name="attribute-value" select="$href"/>
       </p:add-attribute>
       
-      <p:choose name="choose-to-remove-cover">
-        <p:when test="$remove-cover eq 'yes'">
-          
-          <p:delete match="/opf:epub/tr:cover
-                          |/opf:epub/opf:package/opf:manifest/opf:item[@id    = /opf:epub/tr:cover/html:html/html:body/html:div/@id]
-                          |/opf:epub/opf:package/opf:spine/opf:itemref[@idref = /opf:epub/tr:cover/html:html/html:body/html:div/@id]"/>
-          
-        </p:when>
-        <p:otherwise>
-          
-          <!-- cover is created subsequently from generated epub-config -->
-          
-          <p:delete match="/opf:epub/tr:cover"/>
-          
-        </p:otherwise>
-      </p:choose>
+      <tr:store-debug pipeline-step="epub2epub/03-html-plus-opf">
+        <p:with-option name="active" select="$debug"/>
+        <p:with-option name="base-uri" select="$debug-dir-uri"/>
+      </tr:store-debug>
       
       <cx:message>
         <p:with-option name="message" select="'[info] patch deprecated html elements and attributes'"/>
@@ -199,6 +177,27 @@
         <p:with-param name="html-lang" select="$html-lang"/>
         <p:with-param name="toc-page" select="$toc-page"/>
       </p:xslt>
+      
+      <p:choose name="choose-to-remove-cover">
+        <p:when test="$remove-cover eq 'yes'">
+          
+          <cx:message>
+            <p:with-option name="message" select="'[info] remove cover :', $remove-cover"/>
+          </cx:message>
+          
+          <p:delete match="/opf:epub/tr:cover
+            |/opf:epub/opf:package/opf:manifest/opf:item[@id    = /opf:epub/tr:cover/html:html/html:body/html:div/@id]
+            |/opf:epub/opf:package/opf:spine/opf:itemref[@idref = /opf:epub/tr:cover/html:html/html:body/html:div/@id]"/>
+          
+        </p:when>
+        <p:otherwise>
+          
+          <!-- cover is created subsequently from generated epub-config -->
+          
+          <p:delete match="/opf:epub/tr:cover"/>
+          
+        </p:otherwise>
+      </p:choose>
       
       <p:choose>
         <p:when test="$repair-heading-order eq 'yes'">

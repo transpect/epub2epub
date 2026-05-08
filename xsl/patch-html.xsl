@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
   xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  xmlns:tr="http://transpect.io"
   xmlns:opf="http://www.idpf.org/2007/opf"
   xmlns:epub="http://www.idpf.org/2007/ops"
   xmlns:dc="http://purl.org/dc/elements/1.1/"
   xmlns="http://www.w3.org/1999/xhtml" 
   xpath-default-namespace="http://www.w3.org/1999/xhtml"
-  exclude-result-prefixes="dc opf xs"
+  exclude-result-prefixes="dc opf tr xs"
   version="3.0">
   
   <xsl:param name="remove-chars-regex" select="'\s'" as="xs:string"/>
@@ -42,11 +43,12 @@
   
   <xsl:template match="/opf:epub/html/body//a/@href[contains(., '#')][not(starts-with(., '#'))]
                                                    [not(matches(.,'^(https?|ftp|mailto):(//)?'))]">
+    <xsl:variable name="href" select="." as="attribute(href)"/>
     <xsl:variable name="manifest-item" as="element(opf:item)"
-                  select="epub:item-from-filename(substring-before(., '#'))"/>
-    <xsl:attribute name="href" select="if(starts-with(., 'cover.xhtml'))
-                                       then .
-                                       else concat('#', $manifest-item/@id, '_', substring-after(., '#'))"/>
+                  select="epub:item-from-filename(substring-before($href, '#'))"/>
+    <xsl:attribute name="href" select="if(//*[@id = $manifest-item/@id]/ancestor::tr:cover)
+                                       then concat('cover.xhtml#', substring-after($href, '#'))
+                                       else concat('#', $manifest-item/@id, '_', substring-after($href, '#'))"/>
   </xsl:template>
   
   <xsl:template match="/opf:epub/html/body//a/@href[contains(., '#')][starts-with(., '#')]
