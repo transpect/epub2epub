@@ -20,9 +20,6 @@
   <xsl:variable name="css-unit-regex" as="xs:string" 
                 select="'(cm|mm|Q|in|pc|pt|px|r?em|vw|vh|%)'"/>
   
-  <xsl:variable name="nav-exists" as="xs:boolean" 
-                select="exists(/opf:epub/html//nav[@epub:type = 'toc'])"/>
-  
   <xsl:template name="main">
     <xsl:variable name="css" select="if(unparsed-text-available($href))
                                      then unparsed-text($href)
@@ -36,7 +33,7 @@
            Since the EPUB 2.0 spec defines only an NCX ToC and not an HTML ToC, we simply 
            check for the absence of an EPUB 3.0 navigation and assume an EPUB 2.0 HTML 
            ToC might exist. -->
-      <xsl:if test="$hide-toc = 'yes' or not($nav-exists)">
+      <xsl:if test="$hide-toc = 'yes'">
         <xsl:text>&#xa;nav { display:none }</xsl:text>
       </xsl:if>
       <xsl:sequence select="$additional-css/c:data/text()"/>
