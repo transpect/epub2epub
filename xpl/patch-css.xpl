@@ -47,7 +47,6 @@
   <p:try name="try-load-css">
     <p:group>
       <p:variable name="opf-uri" select="/opf:epub/opf:package/@xml:base"/>
-      <p:variable name="nav-exists" select="/opf:epub/html:html//html:nav[@epub:type = 'toc']"/>
       
       <p:for-each name="spine-iteration">
         <p:iteration-source select="/opf:epub/opf:package/opf:manifest/opf:item[@media-type eq 'text/css'][ends-with(@href, '.css')]"/>

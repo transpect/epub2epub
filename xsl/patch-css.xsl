@@ -3,12 +3,14 @@
   xmlns:xs="http://www.w3.org/2001/XMLSchema"
   xmlns:c="http://www.w3.org/ns/xproc-step"
   xmlns:tr="http://transpect.io"
+  xmlns:opf="http://www.idpf.org/2007/opf"
+  xmlns:epub="http://www.idpf.org/2007/ops"
+  xpath-default-namespace="http://www.w3.org/1999/xhtml"
   exclude-result-prefixes="c tr xs"
   version="3.0">
   
   <xsl:param name="href"       as="xs:string"/>
   <xsl:param name="hide-toc"   as="xs:string"/>
-  <xsl:param name="nav-exists" as="xs:boolean"/>
   
   <xsl:import href="http://transpect.io/xslt-util/strings/xsl/regex-functions.xsl"/>
   
@@ -17,6 +19,9 @@
   
   <xsl:variable name="css-unit-regex" as="xs:string" 
                 select="'(cm|mm|Q|in|pc|pt|px|r?em|vw|vh|%)'"/>
+  
+  <xsl:variable name="nav-exists" as="xs:boolean" 
+                select="exists(/opf:epub/html//nav[@epub:type = 'toc'])"/>
   
   <xsl:template name="main">
     <xsl:variable name="css" select="if(unparsed-text-available($href))
@@ -32,7 +37,7 @@
            check for the absence of an EPUB 3.0 navigation and assume an EPUB 2.0 HTML 
            ToC might exist. -->
       <xsl:if test="$hide-toc = 'yes' or not($nav-exists)">
-        <xsl:text>&#xa;#toc { display:none }</xsl:text>
+        <xsl:text>&#xa;nav { display:none }</xsl:text>
       </xsl:if>
       <xsl:sequence select="$additional-css/c:data/text()"/>
     </c:data>
