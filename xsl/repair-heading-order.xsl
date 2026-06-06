@@ -129,11 +129,8 @@
 
   <xsl:function name="e2e:heading-levels-valid" as="xs:boolean*">
     <xsl:param name="heading-levels" as="xs:integer*"/>
-    <xsl:sequence select="every $i in (1 to count($heading-levels))
-                          satisfies
-                            if($i = 1) 
-                            then true() 
-                            else $heading-levels[$i] - $heading-levels[$i - 1] lt 2"/>
+    <xsl:sequence select="every $i in 2 to count($heading-levels)
+                          satisfies $heading-levels[$i] - $heading-levels[$i - 1] lt 2"/>
   </xsl:function>
   
 </xsl:stylesheet>
