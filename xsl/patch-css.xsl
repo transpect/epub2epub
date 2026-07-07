@@ -50,7 +50,8 @@
                              '(margin|padding)(-(top|right|bottom|left))?(:)?(\s*0)mm',
                              '(padding)(-(top|right|bottom|left))?(:)?(-\.|-)?',
                              concat(':\s*([\d])\.', $css-unit-regex),
-                             'a[\p{Z}\p{Cc}]*\{[\p{Z}\p{Cc}]*text-decoration:[\p{Z}\p{Cc}]*none[\p{Z}\p{Cc}]*;[\p{Z}\p{Cc}]*\}'
+                             'a[\p{Z}\p{Cc}]*\{[\p{Z}\p{Cc}]*text-decoration:[\p{Z}\p{Cc}]*none[\p{Z}\p{Cc}]*;[\p{Z}\p{Cc}]*\}',
+                             'body(\.[a-zA-Z]+)'
                             ),
                             ('',
                              '$1',
@@ -58,7 +59,8 @@
                              '$1$2$3:$5',
                              '$1$2$4',
                              ':$1$2',
-                             ''
+                             '',
+                             'div$1'
                             )
                           )"/>
   </xsl:function>
