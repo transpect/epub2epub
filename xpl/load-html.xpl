@@ -97,7 +97,7 @@
               
               <p:wrap match="html:html/html:body/*" wrapper="div" wrapper-namespace="http://www.w3.org/1999/xhtml" group-adjacent="true()"/>
                 
-              <p:add-attribute attribute-name="class" match="/html:html/html:body/html:div">
+              <p:add-attribute attribute-name="class" match="/html:html/html:body/html:div" name="attach-class-att">
                 <p:with-option name="attribute-value" select="/html:html/html:body/@class"/>
               </p:add-attribute>
               
@@ -106,6 +106,8 @@
               <p:identity/>
             </p:otherwise>
           </p:choose>
+          
+          <p:delete match="html:html/html:body/@class" name="remove-class-att"/>
           
           <p:insert match="/html:html/html:body" position="first-child" name="insert-split-point">
             <p:input port="insertion">
