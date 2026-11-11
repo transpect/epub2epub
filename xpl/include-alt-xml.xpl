@@ -86,8 +86,8 @@
           </p:identity>
           
           <p:viewport match="/html:html/html:body//html:img">
-            <p:variable name="filename" select="replace(html:img/@src, '^(.+/)?(.+)', '$2')"/>
-            <p:variable name="alt-text" select="/links/link[matches(@name, $filename)]/@alt">
+            <p:variable name="filename-regex" select="replace(html:img/@src, '^(.+/)?(.+)', '^$2\$')"/>
+            <p:variable name="alt-text" select="/links/link[matches(@name, $filename-regex)]/@alt">
               <p:pipe port="alt-xml" step="e2e-include-alt-xml"/>
             </p:variable>
             
