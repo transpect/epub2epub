@@ -30,8 +30,7 @@
                  consider-headings-in-tables="false">
       
       <xsl:if test="$cover-file">
-        <cover svg="true" svg-scale-hack="true" 
-               href="{replace($cover-file/@href, $remove-chars-regex, '')}"/>  
+        <cover svg="false" href="{replace($cover-file/@href, $remove-chars-regex, '')}"/>  
       </xsl:if>
       
       <types>
