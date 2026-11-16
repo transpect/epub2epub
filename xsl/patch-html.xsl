@@ -149,16 +149,17 @@
     </div>
   </xsl:template>
   
-  <xsl:template match="table[@border and not(@border = ('', '0'))]">
-    <div class="html-deprecated-border-att" style="{concat('border: ', @border, 'px solid #000;')}">
-      <xsl:copy>
-        <xsl:apply-templates select="@* except @border, node()"/>
-      </xsl:copy>
+  <xsl:template match="table[exists((@border, @cellspacing, @cellpadding)[. != ('', '0')])]">
+    <div class="html-deprecated-border-att">
+      <xsl:attribute name="style">
+        <xsl:apply-templates select="@border, @cellpadding, @cellspacing, @style"/>
+      </xsl:attribute>
+      <xsl:apply-templates select="@* except (@border, @cellpadding, @cellspacing, @style), node()"/>
     </div>
   </xsl:template>
   
   <xsl:template match="img[@border and not(@border = ('', '0'))]">
-    <span class="html-deprecated-border-att" style="{concat('border: ', @border, 'px solid #000;')}">
+    <span class="html-deprecated-border-att" style="{epub:html-att-to-css-prop(@border)}">
       <xsl:copy>
         <xsl:apply-templates select="@* except @border, node()"/>
       </xsl:copy>
@@ -170,24 +171,19 @@
       <xsl:attribute name="style">
         <xsl:apply-templates select="@face, @color, @size, @style"/>
       </xsl:attribute>
-      <xsl:apply-templates select="@* except @style, node()"/>
+      <xsl:apply-templates select="@* except (@face, @color, @size, @style), node()"/>
     </span>
   </xsl:template>
   
-  <xsl:template match="font/@face">
-    <xsl:value-of select="concat('font-family: ', ., '; ')"/>
-  </xsl:template>
-  
-  <xsl:template match="font/@size">
-    <xsl:value-of select="concat('font-size: ', epub:map-font-size(.), '; ')"/>
-  </xsl:template>
-  
-  <xsl:template match="font/@color">
-    <xsl:value-of select="concat('color: ', ., '; ')"/>
-  </xsl:template>
-  
-  <xsl:template match="font/@style">
-    <xsl:value-of select="."/>
+  <xsl:template match="font/@face
+                      |font/@size
+                      |font/@color
+                      |font/@style
+                      |table/@border[not(. = ('', '0'))]
+                      |table/@cellpadding[not(. = ('', '0'))]
+                      |table/@cellspacing[not(. = ('', '0'))]
+                      |table/@style">
+    <xsl:value-of select="epub:html-att-to-css-prop(.)"/>
   </xsl:template>
   
   <xsl:template match="dir
@@ -243,6 +239,8 @@
                       |@border[. = ('', '0')]
                       |@char
                       |@charoff
+                      |@cellspacing[. = ('', '0')]
+                      |@cellpadding[. = ('', '0')]
                       |@clear
                       |@frame
                       |@hspace
@@ -299,6 +297,21 @@
       <xsl:copy-of select="."/>
     </xsl:if>
   </xsl:template>
+  
+  <xsl:function name="epub:html-att-to-css-prop" as="xs:string">
+    <xsl:param name="att" as="attribute()"/>
+    <xsl:sequence select="     if($att/local-name() = 'face')
+                            then concat('font-family:', $att, ';') 
+                          else if($att/local-name() = 'color')
+                            then concat('color:', $att, ';')
+                          else if($att/local-name() = 'size')
+                            then concat('font-size:', epub:map-font-size($att), ';')
+                          else if($att/local-name() = 'border')
+                            then concat('border:', $att, 'px solid #000;')
+                          else if($att/local-name() = 'cellspacing')
+                            then concat('border-spacing:', $att, ';')
+                          else $att"/>
+  </xsl:function>
   
   <!-- The old <font size="…"> attribute used a 1–7 scale, 
        which was based on the browser’s default font size (usually 16px) -->
