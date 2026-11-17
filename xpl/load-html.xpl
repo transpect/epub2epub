@@ -171,11 +171,6 @@
         <p:with-option name="attribute-value" select="$href"/>
       </p:add-attribute>
       
-      <tr:store-debug pipeline-step="epub2epub/03-html-plus-opf">
-        <p:with-option name="active" select="$debug"/>
-        <p:with-option name="base-uri" select="$debug-dir-uri"/>
-      </tr:store-debug>
-      
       <cx:message>
         <p:with-option name="message" select="'[info] patch deprecated html elements and attributes'"/>
       </cx:message>
