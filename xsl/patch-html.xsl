@@ -28,7 +28,7 @@
   
   <xsl:template match="html[not(@lang)]">
     <xsl:copy>
-      <xsl:attribute name="lang" select="(@xml:lang, lower-case(/opf:epub/opf:package/opf:metadata/dc:language), $html-lang)[1]"/>
+      <xsl:attribute name="lang" select="lower-case((@xml:lang, /opf:epub/opf:package/opf:metadata/dc:language, $html-lang)[1])"/>
       <xsl:apply-templates select="@* except @lang, node()"/>
     </xsl:copy>
   </xsl:template>
