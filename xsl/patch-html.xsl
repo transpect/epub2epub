@@ -150,12 +150,13 @@
   </xsl:template>
   
   <xsl:template match="table[exists((@border, @cellspacing, @cellpadding)[. != ('', '0')])]">
-    <div class="html-deprecated-border-att">
+    <xsl:copy>
+      <xsl:attribute name="class" select="'html-deprecated-border-att'"/>
       <xsl:attribute name="style">
         <xsl:apply-templates select="@border, @cellpadding, @cellspacing, @style"/>
       </xsl:attribute>
       <xsl:apply-templates select="@* except (@border, @cellpadding, @cellspacing, @style), node()"/>
-    </div>
+    </xsl:copy>
   </xsl:template>
   
   <xsl:template match="img[@border and not(@border = ('', '0'))]">
