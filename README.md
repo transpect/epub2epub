@@ -1,5 +1,5 @@
 # epub2epub
-This library takes EPUB 2.0 and EPUB 3.0 and converts them to more recent standards.
+transpect library for migrating EPUB 2.x/3.x to EPUB 3.3
 
 ## Options
 
