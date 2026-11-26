@@ -296,7 +296,7 @@
   
   <xsl:variable name="ids" select="/opf:epub/html/body//@id" as="attribute(id)*"/>
   
-  <xsl:template match="/opf:epub/html/body//*[@id]/@id[not(.. is key('e2e:by-id', .)[1])]"
+  <xsl:template match="/opf:epub/html/body//*[@id]/@id[not(.. is key('epub:by-id', .)[1])]"
                 priority="5">
     <xsl:message select="'[WARNING] removed ID duplicate:', xs:string(.)"/>
   </xsl:template>
