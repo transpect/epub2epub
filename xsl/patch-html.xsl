@@ -20,6 +20,8 @@
   
   <xsl:import href="http://transpect.io/xslt-util/functx/Strings/Replacing/escape-for-regex.xsl"/>
     
+  <xsl:key name="epub:by-id" match="/opf:epub/html/body//*[@id]" use="@id"/>
+    
   <xsl:variable name="manifest-items" as="element(opf:item)*" 
                 select="/opf:epub/opf:package/opf:manifest/opf:item"/>
   
@@ -290,16 +292,13 @@
     </xsl:copy>
   </xsl:template>
   
-  <!-- remove id duplicates -->
+  <!-- remove id duplicates, keep first occurence -->
   
-  <xsl:variable name="ids" select="//@id" as="attribute(id)*"/>
+  <xsl:variable name="ids" select="/opf:epub/html/body//@id" as="attribute(id)*"/>
   
-  <xsl:template match="@id[count(index-of($ids, .)) gt 1]
-                          [for $id in @id return preceding::*[@id eq $id]]" priority="5">
-    <xsl:variable name="id" select="."/>
-    <xsl:if test="not(preceding::*[@id eq $id])">
-      <xsl:copy-of select="."/>
-    </xsl:if>
+  <xsl:template match="/opf:epub/html/body//*[@id]/@id[generate-id(..) ne generate-id(key('epub:by-id', .)[1])]"
+                priority="5">
+    <xsl:message select="'[WARNING] removed ID duplicate:', xs:string(.)"/>
   </xsl:template>
   
   <xsl:function name="epub:html-att-to-css-prop" as="xs:string">
