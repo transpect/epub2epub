@@ -4,10 +4,11 @@
   xmlns:tr="http://transpect.io"
   xmlns:opf="http://www.idpf.org/2007/opf"
   xmlns:epub="http://www.idpf.org/2007/ops"
+  xmlns:functx="http://www.functx.com"
   xmlns:dc="http://purl.org/dc/elements/1.1/"
   xmlns="http://www.w3.org/1999/xhtml" 
   xpath-default-namespace="http://www.w3.org/1999/xhtml"
-  exclude-result-prefixes="dc opf tr xs"
+  exclude-result-prefixes="dc functx opf tr xs"
   version="3.0">
   
   <xsl:param name="remove-chars-regex" select="'\s'" as="xs:string"/>
@@ -16,6 +17,8 @@
   <xsl:param name="toc-page" as="xs:integer"/>
   
   <xsl:mode on-no-match="shallow-copy"/>
+  
+  <xsl:import href="http://transpect.io/xslt-util/functx/Strings/Replacing/escape-for-regex.xsl"/>
     
   <xsl:variable name="manifest-items" as="element(opf:item)*" 
                 select="/opf:epub/opf:package/opf:manifest/opf:item"/>
@@ -334,7 +337,9 @@
                                             replace(@href, '^(.+/)?(.+)$', '$2'), 
                                             concat(
                                               '^', 
-                                              replace($filename, '^(.+/)?(.+)$', '$2'),
+                                              replace(
+                                                functx:escape-for-regex($filename), 
+                                                '^(.+/)?(.+)$', '$2'),
                                               '$'
                                             )
                                           )]"/>
