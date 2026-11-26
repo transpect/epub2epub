@@ -5,8 +5,9 @@
   xmlns:opf="http://www.idpf.org/2007/opf"
   xmlns:ncx="http://www.daisy.org/z3986/2005/ncx/"
   xmlns:html="http://www.w3.org/1999/xhtml"
+  xmlns:e2e="http://transpect.io/epub2epub"
   xmlns="http://www.w3.org/1999/xhtml"
-  exclude-result-prefixes="xs epub html ncx"
+  exclude-result-prefixes="xs epub html ncx e2e"
   version="3.0">
   
   <xsl:mode on-no-match="shallow-copy"/>
@@ -16,6 +17,18 @@
   
   <xsl:variable name="epub" select="/opf:epub"         as="element(opf:epub)"/>
   <xsl:variable name="ncx"  select="/opf:epub/ncx:ncx" as="element(ncx:ncx)"/>
+  
+  <xsl:variable name="opf-base" as="xs:string" 
+                select="string($epub/opf:package/@xml:base)"/>
+  
+  <!-- ncx src attributes are relative to the ncx file, manifest hrefs relative to the opf -->
+  <xsl:variable name="ncx-uri" as="xs:string?"
+                select="($epub/opf:package/opf:manifest/opf:item[@id eq $epub/opf:package/opf:spine/@toc],
+                         $epub/opf:package/opf:manifest/opf:item[@media-type eq 'application/x-dtbncx+xml'])[1]
+                        /string(resolve-uri(@href, $opf-base))"/>
+  
+  <xsl:key name="e2e:item-by-uri" match="opf:manifest/opf:item" 
+           use="string(resolve-uri(@href, $opf-base))"/>
   
   <xsl:template match="/opf:epub/html:html/html:body/html:div[@class eq 'epub-html-split'][position() = $toc-page]" priority="10">
     <!-- do not generate an empty page when the ToC is hidden -->
@@ -46,30 +59,33 @@
     </ol>
   </xsl:template>
   
-  <xsl:variable name="ncx-fragment-identifiers" as="element(ncx:navPoint)*"
-                select="//ncx:navPoint[contains(ncx:content/@src, '#')]"/>
-  
   <xsl:template match="ncx:navPoint" mode="toc">
     <xsl:if test="normalize-space(.)">
       <xsl:variable name="ncx-source" as="attribute(src)" select="ncx:content/@src"/>
-      <xsl:variable name="manifest-item" as="element(opf:item)"
-                    select="$epub/opf:package/opf:manifest/opf:item[@href = replace($ncx-source, '^(.+)#.+$', '$1')]"/>
+      <xsl:variable name="manifest-item" as="element(opf:item)?"
+                    select="key('e2e:item-by-uri', 
+                                string(resolve-uri(substring-before(concat($ncx-source, '#'), '#'), $ncx-uri))
+                            )[1]"/>
       <li>
-        <a href="{if(contains(ncx:content/@src, 'cover')) 
-                    then '#epub-cover-image-container'
-                  else if(not(contains($ncx-source, '#')) and matches($ncx-source, '\.x?html$'))
-                    then concat(
-                           '#',
-                           $manifest-item/@id
-                         )
-                    else concat(
-                           '#', 
-                           $manifest-item/@id, 
-                           '_', 
-                           substring-after($ncx-source, '#')
-                         )}">
-          <xsl:apply-templates select="ncx:navLabel/ncx:text" mode="#current"/>
-        </a>
+        <xsl:choose>
+          <xsl:when test="contains($ncx-source, 'cover')">
+            <a href="#epub-cover-image-container">
+              <xsl:apply-templates select="ncx:navLabel/ncx:text" mode="#current"/>
+            </a>
+          </xsl:when>
+          <xsl:when test="empty($manifest-item)">
+            <xsl:message select="'[WARNING] ncx navPoint references a target not in the manifest:', 
+                                  string($ncx-source), '- rendering ToC label without link'"/>
+            <xsl:apply-templates select="ncx:navLabel/ncx:text" mode="#current"/>
+          </xsl:when>
+          <xsl:otherwise>
+            <a href="{if(substring-after($ncx-source, '#') eq '')
+                      then concat('#', $manifest-item/@id)
+                      else concat('#', $manifest-item/@id, '_', substring-after($ncx-source, '#'))}">
+              <xsl:apply-templates select="ncx:navLabel/ncx:text" mode="#current"/>
+            </a>
+          </xsl:otherwise>
+        </xsl:choose>
         <xsl:if test="ncx:navPoint">
           <ol class="toc-level-{count(ancestor::ncx:navPoint) + 2}">
             <xsl:apply-templates select="ncx:navPoint" mode="#current"/>
@@ -86,17 +102,5 @@
   </xsl:template>
   
   <xsl:template match="ncx:pageList" mode="toc"/>
-  
-  <xsl:template match="html:*[@id][not(@class eq 'epub-html-split')][starts-with(@id, '#')]">  
-    <xsl:variable name="id" select="@id" as="attribute(id)"/>
-    <xsl:variable name="matching-ncx-fragment-entries" as="element(ncx:navPoint)" 
-                  select="$ncx-fragment-identifiers[replace(ncx:content/@src, '^.*?#', '') = $id]"/>
-    <xsl:copy>
-      <xsl:attribute name="id" select="if($matching-ncx-fragment-entries) 
-                                       then concat(preceding::html:div[@class eq 'epub-html-split'][1]/@id, @id)
-                                       else @id"/>
-      <xsl:apply-templates select="@* except @id, node()"/>
-    </xsl:copy>
-  </xsl:template>
   
 </xsl:stylesheet>

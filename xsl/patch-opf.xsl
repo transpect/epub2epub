@@ -3,10 +3,15 @@
   xmlns:xs="http://www.w3.org/2001/XMLSchema"
   xmlns:dc="http://purl.org/dc/elements/1.1/"
   xmlns:opf="http://www.idpf.org/2007/opf"
+  xmlns:tr="http://transpect.io"
   version="3.0">
+  
+  <xsl:mode on-no-match="shallow-copy"/>
   
   <xsl:param name="remove-cover" as="xs:string"/>
   <xsl:param name="remove-files-list" as="xs:string?"/>
+  
+  <xsl:import href="http://transpect.io/xslt-util/xmlid/xsl/xmlid.xsl"/>
   
   <xsl:variable name="remove-files-list-list" as="xs:string*" 
                 select="for $file in tokenize($remove-files-list, '\s') 
@@ -17,7 +22,12 @@
   <xsl:variable name="cover-html-id" as="attribute(id)?" 
                 select="/opf:package/opf:manifest/opf:item[/opf:package/opf:guide/opf:reference[@type eq 'cover']/@href eq @href]/@id"/>
   
-  <xsl:mode on-no-match="shallow-copy"/>
+  <xsl:template match="/opf:package/opf:spine/opf:itemref/@idref
+                      |/opf:package/opf:manifest/opf:item/@id
+                      |/opf:package/opf:spine/@toc
+                      |/opf:package/opf:metadata/opf:meta[@name eq 'cover']/@content">
+    <xsl:attribute name="{local-name()}" select="tr:normalize-xmlid(.)"/>
+  </xsl:template>
   
   <xsl:template match="opf:metadata/dc:*[not(normalize-space())]
                       |opf:metadata/dc:identifier[not(@id) and count(parent::*/dc:identifier) gt 1]
